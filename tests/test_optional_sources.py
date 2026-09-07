@@ -10,7 +10,8 @@ from knowledge_video.workflow import Workflow
 @pytest.mark.parametrize(
     "source_case", ["no_candidates", "failed_fetch", "cached_empty"]
 )
-def test_without_sources_reaches_reviewed_lesson(tmp_path, monkeypatch, source_case):
+@pytest.mark.parametrize("block_ids", [("b1", "b2"), ("block-1", "block-2"), ("block-1", "block-1")])
+def test_without_sources_reaches_reviewed_lesson(tmp_path, monkeypatch, source_case, block_ids):
     import knowledge_video.workflow as w
 
     browser = tmp_path / "chrome"
@@ -40,7 +41,7 @@ def test_without_sources_reaches_reviewed_lesson(tmp_path, monkeypatch, source_c
         uncertainties=[],
         blocks=[
             Block(
-                id=f"b{i}",
+                id=block_ids[i - 1],
                 slide_id=f"s{i}",
                 narration="这里使用明确标注的假设数据，逐步计算并说明每一步的含义。",
                 headline="计算",
@@ -87,3 +88,12 @@ def test_without_sources_reaches_reviewed_lesson(tmp_path, monkeypatch, source_c
     assert any("未使用外部核验资料" in note for note in saved["uncertainties"])
     assert all(b["source_ids"] == [] for b in saved["blocks"])
     assert len(calls) == (1 if source_case == "failed_fetch" else 0)
+
+    from narration_video.core import parse_script
+
+    parsed = parse_script((tmp_path / "narration.md").read_text())
+    assert [b["id"] for b in parsed] == [b["id"] for b in saved["blocks"]]
+    assert len({b["id"] for b in parsed}) == 2
+    audit = json.loads((tmp_path / "id_normalization.json").read_text())
+    assert len(audit["changes"]) == (0 if block_ids[0] == "b1" else 2)
+    assert [b.id for b in lesson.blocks] == list(block_ids)

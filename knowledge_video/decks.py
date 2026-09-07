@@ -3,6 +3,49 @@ from pathlib import Path
 
 from .materials import bundle_html
 
+BLOCK_ID = re.compile(r"[a-z][a-z0-9_]{0,40}")
+
+
+def normalize_lesson_ids(lesson):
+    """Canonicalize internal narration IDs without changing HTML page references.
+
+    Keep the first occurrence of every valid ID, including IDs later in the
+    lesson. This keeps cached artifacts stable and prevents repairs from taking
+    an ID already assigned to another paragraph. Raw provider output is untouched.
+    """
+    result = lesson.model_copy(deep=True)
+    reserved = {b.id for b in result.blocks if BLOCK_ID.fullmatch(b.id)}
+    used = set()
+    changes = []
+    for index, block in enumerate(result.blocks, 1):
+        original = block.id
+        if BLOCK_ID.fullmatch(original) and original not in used:
+            used.add(original)
+            continue
+        base = re.sub(r"[^a-z0-9_]+", "_", original.lower()).strip("_")
+        if not base:
+            base = f"block_{index}"
+        if not base[0].isalpha():
+            base = "b_" + base
+        base = base[:41]
+        candidate = base
+        suffix = 2
+        while candidate in reserved or candidate in used:
+            tail = f"_{suffix}"
+            candidate = base[: 41 - len(tail)] + tail
+            suffix += 1
+        block.id = candidate
+        used.add(candidate)
+        changes.append(
+            {
+                "position": index,
+                "old_id": original,
+                "new_id": candidate,
+                "slide_id": block.slide_id,
+            }
+        )
+    return result, changes
+
 
 def validate_lesson(lesson, existing=None):
     if not 2 <= len(lesson.blocks) <= 40:
@@ -10,7 +53,7 @@ def validate_lesson(lesson, existing=None):
     ids = set()
     slides = set()
     for b in lesson.blocks:
-        if not re.fullmatch("[a-z][a-z0-9_]{0,40}", b.id) or b.id in ids:
+        if not BLOCK_ID.fullmatch(b.id) or b.id in ids:
             raise ValueError("段落 id 不合法或重复")
         if not b.slide_id or b.slide_id in slides:
             raise ValueError("每个自然段需要独立且唯一的页面 id")

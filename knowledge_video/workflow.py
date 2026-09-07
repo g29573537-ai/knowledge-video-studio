@@ -15,7 +15,12 @@ from narration_video.core import file_hash, load_project, normalized
 from narration_video.voice import OmniVoice
 
 from . import prompts
-from .decks import existing_deck, validate_generated_html, validate_lesson
+from .decks import (
+    existing_deck,
+    normalize_lesson_ids,
+    validate_generated_html,
+    validate_lesson,
+)
 from .languages import language_instruction
 from .materials import bundle_html, fetch_source, inspect_slides
 from .models import (
@@ -161,7 +166,10 @@ class Workflow:
         )
         if not review.approved:
             raise RuntimeError("内容审查未通过：" + "；".join(review.issues))
-        lesson = review.lesson
+        lesson, id_changes = normalize_lesson_ids(review.lesson)
+        atomic_json(p / "id_normalization.json", {"changes": id_changes})
+        if id_changes:
+            self.notify(f"已自动规范 {len(id_changes)} 个段落编号，保留原始讲稿和页面对应关系")
         if not sources:
             notice = "本课依据模型通用知识编写，未使用外部核验资料。"
             if notice not in lesson.uncertainties:
