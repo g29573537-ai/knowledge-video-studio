@@ -4,7 +4,7 @@ The application source and included generic HTML template are MIT licensed. No p
 
 Dependencies retain their own licenses. In particular:
 
-- OmniVoice Studio is an external service: https://github.com/Galest/OmniVoice-Studio . Its application, engine, model and tokenizer licenses are separate from this repository.
+- OmniVoice Studio is an external service: https://github.com/Galest/OmniVoice-Studio . The pinned Studio application declares AGPL-3.0-only; the upstream OmniVoice model code declares Apache-2.0. The installer clones the external service into the ignored `.runtime/` directory. Its application, engine, model and tokenizer licenses remain separate from this repository.
 - WhisperX and faster-whisper provide local alignment and transcription. The selected alignment/ASR model weights retain their model-card licenses.
 - FFmpeg is an external executable. Its build configuration and included codecs determine applicable distribution terms. This repository does not bundle FFmpeg binaries.
 - Chrome / Chromium and system fonts are installed separately.

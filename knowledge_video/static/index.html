@@ -87,6 +87,46 @@
               placeholder="填写后无需上传参考录音"
           /></label>
         </div>
+        <div class="voice-model-panel">
+          <h3>语音模型与语言</h3>
+          <p class="hint">
+            OmniVoice
+            多语言克隆共用一套权重。选择语言后，系统会准备对应的字幕对齐模型。
+          </p>
+          <div class="grid2">
+            <label>视频语言<select id="language"></select></label>
+            <label
+              >参考录音语言<select id="referenceLanguage">
+                <option value="auto">自动识别</option>
+              </select></label
+            >
+            <label>识别模型<select id="asrModel"></select></label>
+            <div>
+              <span class="hint">克隆模型</span>
+              <p>OmniVoice · 多语言声音克隆</p>
+            </div>
+          </div>
+          <div class="preview-row">
+            <button type="button" class="secondary" id="downloadModels">
+              下载所选语言模型
+            </button>
+            <button type="button" class="secondary" id="loadModels">
+              载入模型
+            </button>
+          </div>
+          <p id="modelPreparation" class="hint" role="status">
+            正在读取模型状态
+          </p>
+          <progress
+            id="modelProgress"
+            max="4"
+            value="0"
+            hidden
+            aria-label="模型准备步骤"
+          ></progress>
+          <p id="modelInstalled" class="hint"></p>
+          <p id="voiceLiveStatus" class="hint" role="status"></p>
+        </div>
         <details>
           <summary>运行环境选项</summary>
           <div class="grid2">

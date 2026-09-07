@@ -233,6 +233,9 @@ $("createForm").onsubmit = async (event) => {
     }
     const request = {
       topic: $("topic").value.trim(),
+      language: $("language").value || "zh",
+      reference_language: $("referenceLanguage").value || "auto",
+      asr_model: $("asrModel").value || "small",
       audience: $("audience").value,
       minutes: Number($("minutes").value),
       playback_speed: Number($("speed").value),
@@ -377,11 +380,74 @@ $("resume").onclick = async () => {
     toast(e.message);
   }
 };
+let modelCatalog = null;
+async function refreshVoiceModels() {
+  const data = await api("/api/voice/models");
+  if (!modelCatalog) {
+    const options = (select, entries) => {
+      for (const [value, label] of Object.entries(entries)) {
+        const opt = document.createElement("option");
+        opt.value = value;
+        opt.textContent = label;
+        select.append(opt);
+      }
+    };
+    options($("language"), data.languages);
+    options($("referenceLanguage"), data.languages);
+    options($("asrModel"), data.asr_models);
+  }
+  modelCatalog = data;
+  const op = data.operation,
+    running = op.status === "running";
+  $("modelPreparation").textContent =
+    (running ? `步骤 ${op.step}/${op.steps} · ` : "") + op.message;
+  $("modelProgress").hidden = !running;
+  $("modelProgress").value = op.step;
+  $("downloadModels").disabled = $("loadModels").disabled = running;
+  const live = await api(
+    "/api/voice/status?url=" + encodeURIComponent($("voiceUrl").value.trim()),
+  );
+  $("voiceLiveStatus").textContent = live.loaded
+    ? "克隆模型当前已载入"
+    : live.loading
+      ? "克隆模型正在载入"
+      : "克隆模型尚未载入 · " + (live.detail || "可点击载入模型");
+  const ready = data.prepared.some(
+    (p) =>
+      p.language === $("language").value && p.asr_model === $("asrModel").value,
+  );
+  $("modelInstalled").textContent = ready
+    ? "所选语言模型已准备，文件检查通过"
+    : "首次使用会下载缺少的模型，已有权重自动复用";
+}
+async function prepareVoiceModels(action) {
+  try {
+    $("toast").hidden = true;
+    await api("/api/voice/models/prepare", {
+      method: "POST",
+      body: JSON.stringify({
+        language: $("language").value,
+        asr_model: $("asrModel").value,
+        action,
+        voice_url: $("voiceUrl").value.trim(),
+      }),
+    });
+    await refreshVoiceModels();
+  } catch (e) {
+    toast(e.message);
+  }
+}
+$("downloadModels").onclick = () => prepareVoiceModels("download");
+$("loadModels").onclick = () => prepareVoiceModels("load");
+$("language").onchange = $("asrModel").onchange = () =>
+  refreshVoiceModels().catch((e) => toast(e.message));
 async function boot() {
   try {
+    await refreshVoiceModels();
     templateOptions = await api("/api/templates");
     templateUI();
     const env = await api("/api/system");
+    if (env.voice_url) $("voiceUrl").value = env.voice_url;
     const ready =
       env.ffmpeg && env.node && env.media_installed && env.voice.loaded;
     $("health").textContent = ready ? "本地服务已就绪" : "环境需要配置";
@@ -393,6 +459,7 @@ async function boot() {
   }
   pollTimer = setInterval(async () => {
     try {
+      if (!$("settings").hidden) await refreshVoiceModels();
       if (active) renderTask(await api("/api/jobs/" + active));
       await refreshJobs();
     } catch {}

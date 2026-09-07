@@ -16,6 +16,7 @@ from narration_video.voice import OmniVoice
 
 from . import prompts
 from .decks import existing_deck, validate_generated_html, validate_lesson
+from .languages import language_instruction
 from .materials import bundle_html, fetch_source, inspect_slides
 from .models import (
     DeckOutput,
@@ -57,7 +58,10 @@ class Workflow:
         for attempt in range(self.request.max_repairs + 1):
             try:
                 answer = self.provider.generate(
-                    instruction, {**payload, "previous_error": error}, model, images
+                    instruction + language_instruction(self.request.language),
+                    {**payload, "previous_error": error},
+                    model,
+                    images,
                 )
                 atomic_json(target, answer.model_dump())
                 return answer
@@ -261,19 +265,25 @@ class Workflow:
                 "model": "omnivoice",
                 "mode": "clone",
                 "profile_id": r.profile_id,
-                "language": "zh",
+                "language": r.language,
+                "reference_language": r.reference_language,
                 "speed": 1.0,
                 "timeout_seconds": 900,
             },
             "alignment": {
-                "language": "zh",
+                "language": r.language,
                 "device": "cpu",
                 "threads": 4,
                 "min_char_score": 0.1,
                 "min_coverage": 0.9,
                 "min_cue_score": 0.15,
             },
-            "subtitle": {"font_size": 48, "max_chars": 25, "bottom": 50},
+            "asr_model": r.asr_model,
+            "subtitle": {
+                "font_size": 48,
+                "max_chars": 25 if r.language in ("zh", "ja", "ko") else 52,
+                "bottom": 50,
+            },
             "cues": {b.id: states[b.slide_id] for b in lesson.blocks},
         }
         if r.chrome:
@@ -392,6 +402,10 @@ class Workflow:
                             voice,
                             "--output",
                             reference,
+                            "--language",
+                            r.reference_language,
+                            "--asr-model",
+                            r.asr_model,
                         ],
                         p,
                         self.cancel,
@@ -506,6 +520,8 @@ class Workflow:
                 "subtitle_characters_match": True,
                 "sources": len(sources),
                 "knowledge_basis": knowledge_basis,
+                "language": r.language,
+                "asr_model": r.asr_model,
                 "uncertainties": lesson.uncertainties,
                 "human_listening_review": "recommended",
                 "video_sha256": file_hash(p / "build/video.mp4"),

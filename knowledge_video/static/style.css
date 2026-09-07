@@ -654,3 +654,18 @@ pre {
   border-radius: 0;
   transform-origin: top left;
 }
+
+.voice-model-panel {
+  border-top: 1px solid var(--line);
+  margin-top: 20px;
+  padding-top: 16px;
+}
+.voice-model-panel h3 {
+  font-size: 15px;
+  margin: 0 0 10px;
+}
+#modelProgress {
+  width: 100%;
+  height: 7px;
+  accent-color: var(--accent);
+}

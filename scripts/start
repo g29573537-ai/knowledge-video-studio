@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+STUDIO_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+STUDIO_PYTHON=${STUDIO_PYTHON:-$STUDIO_ROOT/.runtime/omnivoice/.venv/bin/python}
+[ -x "$STUDIO_PYTHON" ] || { echo 'Run ./scripts/install first.' >&2; exit 1; }
+export PATH="$STUDIO_ROOT/.runtime/node/bin:$PATH"
+exec "$STUDIO_PYTHON" "$STUDIO_ROOT/scripts/start.py" "$@"

@@ -2,6 +2,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from .languages import Language
+
 
 class ProviderConfig(BaseModel):
     kind: Literal["codex", "external"] = "codex"
@@ -21,6 +23,11 @@ class JobRequest(BaseModel):
     minutes: float = Field(default=3, ge=0.3, le=20)
     playback_speed: float = Field(default=1.2, ge=0.5, le=2)
     provider: ProviderConfig = Field(default_factory=ProviderConfig)
+    language: Language = "zh"
+    reference_language: Literal[
+        "auto", "zh", "en", "ja", "ko", "fr", "de", "es", "it", "pt", "ru"
+    ] = "auto"
+    asr_model: Literal["small", "medium", "large-v3"] = "small"
     voice_path: str = ""
     voice_upload: str = ""
     reference_text: str = ""

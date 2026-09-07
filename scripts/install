@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+STUDIO_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+export PATH="$HOME/.local/bin:$PATH"
+if ! command -v uv >/dev/null 2>&1; then
+    command -v curl >/dev/null 2>&1 || { echo 'Please install curl, then retry.' >&2; exit 1; }
+    STUDIO_UV_INSTALL=$(mktemp)
+    trap 'rm -f "$STUDIO_UV_INSTALL"' EXIT
+    curl -LsSf https://astral.sh/uv/install.sh -o "$STUDIO_UV_INSTALL"
+    UV_NO_MODIFY_PATH=1 sh "$STUDIO_UV_INSTALL"
+fi
+exec uv run --no-project --python 3.11 "$STUDIO_ROOT/scripts/install.py" "$@"

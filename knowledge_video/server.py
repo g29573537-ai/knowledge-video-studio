@@ -17,6 +17,7 @@ from narration_video.voice import OmniVoice
 from .jobs import Jobs
 from .materials import bundle_html, inspect_slides
 from .models import JobRequest
+from .model_manager import ModelManager
 
 PUBLIC = {
     "build/video.mp4",
@@ -38,6 +39,7 @@ def create_app(data_dir=None):
     )
     data.mkdir(parents=True, exist_ok=True)
     jobs = Jobs(data)
+    voice_models = ModelManager(data)
     app = FastAPI(title="Knowledge Video Studio")
     app.state.jobs = jobs
 
@@ -79,15 +81,43 @@ def create_app(data_dir=None):
             "chrome": chrome_path(),
             "media_installed": bool(importlib.util.find_spec("whisperx")),
             "data_dir": str(data),
+            "voice_url": os.environ.get("STUDIO_VOICE_URL", "http://127.0.0.1:3900"),
         }
         try:
-            result["voice"] = OmniVoice({}).json("/model/status")
+            result["voice"] = OmniVoice({"base_url": result["voice_url"]}).json(
+                "/model/status"
+            )
         except Exception:
             result["voice"] = {
                 "loaded": False,
                 "detail": "请启动 OmniVoice Studio 服务",
             }
         return result
+
+    @app.get("/api/voice/models")
+    def model_catalog():
+        return voice_models.catalog()
+
+    @app.get("/api/voice/status")
+    def voice_status(url: str = "http://127.0.0.1:3900"):
+        try:
+            return OmniVoice({"base_url": url}).json("/model/status")
+        except RuntimeError:
+            return {"loaded": False, "loading": False, "detail": "语音服务未连接"}
+
+    @app.post("/api/voice/models/prepare")
+    def prepare_models(body: dict):
+        if any(j["status"] in ("running", "queued") for j in jobs.list()):
+            raise HTTPException(409, "视频任务正在运行，请完成后再下载或加载模型")
+        try:
+            return voice_models.start(
+                body.get("language", "zh"),
+                body.get("asr_model", "small"),
+                body.get("action", "download"),
+                body.get("voice_url", "http://127.0.0.1:3900"),
+            )
+        except ValueError as exc:
+            raise HTTPException(400, str(exc))
 
     @app.get("/api/template/default")
     def default_template():
@@ -134,6 +164,8 @@ def create_app(data_dir=None):
 
     @app.post("/api/jobs")
     def create_job(request: JobRequest):
+        if voice_models.catalog()["operation"]["status"] == "running":
+            raise HTTPException(409, "模型正在准备，请完成后再开始制作")
         if request.voice_upload:
             if not request.voice_upload.isalnum():
                 raise HTTPException(400, "上传编号不合法")

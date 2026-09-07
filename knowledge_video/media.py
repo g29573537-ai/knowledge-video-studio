@@ -1,13 +1,13 @@
 """Heavy audio work runs in a child process, isolated from the web server."""
 
 import argparse
-import os
 import shutil
 from pathlib import Path
 
 from narration_video.alignment import align_blocks
 from narration_video.cli import execute, synthesize
 from narration_video.core import (
+    digest,
     file_hash,
     load_project,
     normalized,
@@ -67,18 +67,27 @@ def main():
     parser.add_argument("path")
     parser.add_argument("--output")
     parser.add_argument("--repairs", type=int, default=2)
+    parser.add_argument("--language", default="auto")
+    parser.add_argument(
+        "--asr-model", choices=["small", "medium", "large-v3"], default="small"
+    )
     args = parser.parse_args()
     if args.stage == "reference":
         p = prepare_reference(args.path, args.output)
         from faster_whisper import WhisperModel
 
         model = WhisperModel(
-            os.environ.get("STUDIO_ASR_MODEL", "small"),
+            args.asr_model,
             device="cpu",
             compute_type="int8",
             cpu_threads=4,
         )
-        segs, _ = model.transcribe(str(p), language="zh", beam_size=5, vad_filter=False)
+        segs, _ = model.transcribe(
+            str(p),
+            language=None if args.language == "auto" else args.language,
+            beam_size=5,
+            vad_filter=False,
+        )
         text = "".join(s.text for s in segs).strip()
         if len(normalized(text)) < 4:
             raise ValueError("无法识别有效参考声音，请填写准确逐字稿")
@@ -89,7 +98,7 @@ def main():
         from faster_whisper import WhisperModel
 
         model = WhisperModel(
-            os.environ.get("STUDIO_ASR_MODEL", "small"),
+            cfg.get("asr_model", "small"),
             device="cpu",
             compute_type="int8",
             cpu_threads=4,
@@ -99,12 +108,24 @@ def main():
         cache.mkdir(exist_ok=True)
         rows = []
         for block in manifest["blocks"]:
-            target = cache / (file_hash(Path(block["audio"])) + ".json")
+            target = cache / (
+                digest(
+                    {
+                        "audio": file_hash(Path(block["audio"])),
+                        "language": cfg["voice"].get("language", "zh"),
+                        "model": cfg.get("asr_model", "small"),
+                    }
+                )
+                + ".json"
+            )
             if target.exists():
                 actual = read_json(target)["text"]
             else:
                 segments, _ = model.transcribe(
-                    block["audio"], language="zh", beam_size=5, vad_filter=False
+                    block["audio"],
+                    language=cfg["voice"].get("language", "zh"),
+                    beam_size=5,
+                    vad_filter=False,
                 )
                 actual = "".join(s.text for s in segments)
                 write_json(target, {"text": actual})

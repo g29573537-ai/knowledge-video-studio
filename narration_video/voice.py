@@ -159,7 +159,7 @@ class OmniVoice:
         for key, value in {
             "name": name,
             "ref_text": text,
-            "language": "zh",
+            "language": self.config.get("reference_language", "auto"),
             "kind": "clone",
         }.items():
             pieces.append(

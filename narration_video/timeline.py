@@ -55,6 +55,15 @@ def acoustic_subtitle_spans(text, max_chars, chars):
             # Attach punctuation and spaces to the preceding caption.
             if end < size and not normalized(text[end]):
                 continue
+            # Keep space-delimited words intact when a word fits within a caption.
+            if (
+                end < size
+                and text[end - 1].isascii()
+                and text[end - 1].isalnum()
+                and text[end].isascii()
+                and text[end].isalnum()
+            ):
+                continue
             first, last = prefix[start], prefix[end] - 1
             if any(first < pause <= last for pause in pauses):
                 continue

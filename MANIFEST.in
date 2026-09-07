@@ -1,12 +1,13 @@
 include README.md LICENSE THIRD_PARTY.md AGENTS.md .gitignore
 recursive-include docs *.md
-recursive-include scripts *.py dev
+recursive-include scripts *.py dev install start
 recursive-include examples *.json
 recursive-include .github *.yml
 recursive-include knowledge_video/static *.html *.css *.js
 recursive-include knowledge_video/templates *.html
 recursive-include narration_video *.mjs
 prune .studio
+prune .runtime
 prune build
 prune dist
 global-exclude __pycache__ *.py[cod] .DS_Store
