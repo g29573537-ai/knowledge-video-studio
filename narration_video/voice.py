@@ -41,29 +41,36 @@ class OmniVoice:
 
     def wait_ready(self):
         # This OmniVoice checkout submits cold model loads into the inference pool.
-        # Require completed startup warm-up rather than entering a single-worker deadlock.
+        # Warm up through the async setup endpoint before entering inference.
         if self.config.get("model", "omnivoice") != "omnivoice":
             return
         deadline = time.monotonic() + float(
             self.config.get("warmup_timeout_seconds", 900)
         )
         previous = None
+        warmup_requested = False
         while True:
             status = self.json("/model/status")
             if status.get("loaded"):
                 return
-            if status.get("error") or not status.get("loading"):
-                raise RuntimeError(
-                    "OmniVoice is not warmed up. Complete model downloads and restart the backend; "
-                    f"model status: {status.get('detail', status.get('status'))}"
-                )
+            if status.get("error"):
+                raise RuntimeError(f"OmniVoice 模型加载失败：{status['error']}")
+            if not status.get("loading") and not warmup_requested:
+                try:
+                    self.request("/setup/warmup", data=b"{}", timeout=20)
+                except RuntimeError as exc:
+                    raise RuntimeError(
+                        "OmniVoice 模型未加载，自动唤醒失败。请在语音服务中加载模型后继续任务。"
+                    ) from exc
+                warmup_requested = True
+                print("VOICE waking idle model; waiting for loaded=true", flush=True)
             detail = status.get("detail", status.get("status"))
             if detail != previous:
                 print(f"VOICE waiting for model: {detail}", flush=True)
                 previous = detail
             if time.monotonic() >= deadline:
                 raise TimeoutError(
-                    "OmniVoice warm-up timed out; cached downloads are preserved"
+                    "OmniVoice 模型唤醒超时，尚未确认 loaded=true；请检查语音服务日志后继续任务"
                 )
             time.sleep(3)
 

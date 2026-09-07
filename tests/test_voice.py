@@ -59,14 +59,42 @@ def test_clone_does_not_fall_back_to_default(monkeypatch):
         c.identity()
 
 
-def test_unloaded_backend_fails_before_cold_inference(monkeypatch):
+def test_idle_backend_warms_once_and_waits_for_loaded_flag(monkeypatch):
     c = OmniVoice({"mode": "design"})
+    statuses = iter(
+        [
+            {"loaded": False, "loading": False, "detail": "Model ready"},
+            {"loaded": False, "loading": False, "detail": "Model ready"},
+            {"loaded": False, "loading": True},
+            {"loaded": True},
+        ]
+    )
+    calls = []
+    monkeypatch.setattr(c, "json", lambda route: next(statuses))
+    monkeypatch.setattr(c, "request", lambda route, **kw: calls.append((route, kw)))
+    monkeypatch.setattr("narration_video.voice.time.sleep", lambda seconds: None)
+    c.wait_ready()
+    assert calls == [("/setup/warmup", {"data": b"{}", "timeout": 20})]
+
+
+def test_warmup_does_not_accept_stale_ready_text(monkeypatch):
+    c = OmniVoice({"warmup_timeout_seconds": 0})
     monkeypatch.setattr(
         c,
         "json",
         lambda route: {"loaded": False, "loading": False, "detail": "Model ready"},
     )
-    with pytest.raises(RuntimeError, match="not warmed up"):
+    monkeypatch.setattr(c, "request", lambda *a, **kw: b"{}")
+    with pytest.raises(TimeoutError, match="loaded=true"):
+        c.wait_ready()
+
+
+def test_warmup_preserves_real_model_errors(monkeypatch):
+    c = OmniVoice({})
+    monkeypatch.setattr(
+        c, "json", lambda route: {"loaded": False, "error": "weights unavailable"}
+    )
+    with pytest.raises(RuntimeError, match="weights unavailable"):
         c.wait_ready()
 
 

@@ -64,7 +64,7 @@ STUDIO_PYTHON=/path/to/python ./scripts/dev
 
 本项目通过 REST 连接 [OmniVoice Studio](https://github.com/Galest/OmniVoice-Studio)。请按照上游项目说明安装并启动服务，默认地址 `http://127.0.0.1:3900`。语音模型和 tokenizer 权重首次使用时需要下载，**模型状态必须为 loaded=true**。
 
-工作台不会修改上游项目源码或依赖。服务空闲卸载模型后，需要在 OmniVoice 中重新加载或重启你自己的服务。不要使用会清空数据的上游 smoke-test 脚本作日常检查。
+工作台不会修改上游项目源码或依赖。服务空闲卸载模型后，工作台会调用 `/setup/warmup` 自动唤醒，并等待实际 `loaded=true` 后才进入配音。若加载失败或超时，保留任务进度并显示具体错误。不要使用会清空数据的上游 smoke-test 脚本作日常检查。
 
 网页可上传参考录音、指定本机路径，或填写已有声音档案 ID。推荐 6 至 20 秒、发音清楚且音量稳定的本人或授权录音。录音逐字稿可手动填写；留空则用本地 faster-whisper 识别。识别模型首次使用也会下载。
 
