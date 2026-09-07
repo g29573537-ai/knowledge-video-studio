@@ -101,56 +101,128 @@ $("voiceFile").onchange = () => {
 function mode() {
   return document.querySelector("[name=slidesMode]:checked").value;
 }
+let templateOptions = [
+  {
+    id: "default",
+    name: "通用教学",
+    description: "黑底 · 蓝色强调 · 简洁排版",
+    path: "",
+  },
+];
+let selectedTemplate = "default",
+  previewVersion = 0;
+const userPaths = { generate: "", existing: "" };
+function chosenPath() {
+  if (mode() === "existing" || selectedTemplate === "custom")
+    return $("slidesPath").value.trim();
+  return templateOptions.find((t) => t.id === selectedTemplate)?.path || "";
+}
 function resetTemplate() {
+  previewVersion++;
   templateConfirmed = "";
   $("templatePreview").hidden = true;
-  $("templateStatus").textContent =
-    mode() === "generate" && !$("slidesPath").value
-      ? "已选择内置教学模板"
-      : "请检查并预览选定的 HTML";
-  $("pathLabel").firstChild.textContent =
-    mode() === "existing"
-      ? "已有 HTML slides 的本地路径"
-      : "参考模板 HTML 路径（可选）";
-  $("slidesPath").placeholder =
-    mode() === "existing"
-      ? "/absolute/path/slides.html"
-      : "留空使用内置黑底教学模板";
+  $("templateStatus").textContent = "请检查并预览选定的 HTML";
 }
-document
-  .querySelectorAll("[name=slidesMode]")
-  .forEach((x) => (x.onchange = resetTemplate));
-$("slidesPath").oninput = resetTemplate;
-$("inspect").onclick = async () => {
+function templateUI() {
+  const existing = mode() === "existing";
+  $("templatePicker").hidden = existing;
+  $("pathLabel").hidden = !existing && selectedTemplate !== "custom";
+  $("pathLabel").firstChild.textContent = existing
+    ? "已有 HTML slides 的本地路径"
+    : "自定义模板 HTML 的本地路径";
+  $("slidesPath").placeholder = "/absolute/path/slides.html";
+  $("slidesPath").value = userPaths[mode()];
+  $("templatePicker").replaceChildren(
+    ...[
+      ...templateOptions,
+      { id: "custom", name: "自定义模板", description: "指定本机 HTML 文件" },
+    ].map((t) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "template-option";
+      b.setAttribute("aria-pressed", String(selectedTemplate === t.id));
+      const name = document.createElement("b"),
+        desc = document.createElement("small");
+      name.textContent = t.name;
+      desc.textContent = t.description;
+      b.append(name, desc);
+      b.onclick = () => {
+        selectedTemplate = t.id;
+        resetTemplate();
+        templateUI();
+        if (t.id !== "custom") inspectTemplate();
+        else $("slidesPath").focus();
+      };
+      return b;
+    }),
+  );
+  if (!existing && selectedTemplate === "default")
+    $("templateStatus").textContent = "已选择通用教学模板";
+}
+document.querySelectorAll("[name=slidesMode]").forEach(
+  (x) =>
+    (x.onchange = () => {
+      resetTemplate();
+      templateUI();
+      if (mode() === "generate" && selectedTemplate !== "custom")
+        inspectTemplate();
+    }),
+);
+$("slidesPath").oninput = () => {
+  userPaths[mode()] = $("slidesPath").value;
+  resetTemplate();
+};
+async function inspectTemplate() {
+  const version = ++previewVersion,
+    path = chosenPath();
   try {
     $("toast").hidden = true;
-    const path = $("slidesPath").value.trim();
-    if (!path && mode() === "generate") {
+    if (!path && mode() === "generate" && selectedTemplate === "default") {
       templateConfirmed = "default";
-      $("templateStatus").textContent = "已确认内置黑底教学模板";
+      $("templateStatus").textContent = "已确认通用教学模板";
       $("templatePreview").hidden = false;
       $("templatePreview").querySelector("iframe").src =
         "/api/template/default";
       return;
     }
+    if (!path) throw Error("请填写 HTML 文件路径");
+    $("templateStatus").textContent = "正在检查模板…";
     const data = await api("/api/slides/inspect", {
       method: "POST",
       body: JSON.stringify({ path }),
     });
+    if (version !== previewVersion) return;
     templateConfirmed = path;
-    $("templateStatus").textContent = `已确认 · ${data.slides.length} 页`;
+    const name =
+      mode() === "generate"
+        ? templateOptions.find((t) => t.id === selectedTemplate)?.name ||
+          "自定义模板"
+        : "已有课件";
+    $("templateStatus").textContent =
+      `已确认 ${name} · ${data.slides.length} 页`;
     $("templatePreview").hidden = false;
     $("templatePreview").querySelector("iframe").src = data.preview;
   } catch (e) {
-    toast(e.message);
+    if (version === previewVersion) {
+      $("templateStatus").textContent = "检查未通过";
+      toast(e.message);
+    }
   }
-};
+}
+$("inspect").onclick = inspectTemplate;
+templateUI();
+new ResizeObserver(([entry]) => {
+  $("templatePreview").querySelector("iframe").style.transform =
+    `scale(${entry.contentRect.width / 1920})`;
+}).observe($("templatePreview"));
 $("createForm").onsubmit = async (event) => {
   event.preventDefault();
   $("toast").hidden = true;
   $("start").disabled = true;
   try {
-    const path = $("slidesPath").value.trim();
+    const path = chosenPath();
+    if (!path && (mode() === "existing" || selectedTemplate === "custom"))
+      throw Error("请填写 HTML 文件路径");
     if ((path || mode() === "existing") && templateConfirmed !== path)
       throw Error("请先检查并预览选定的课件");
     const file = $("voiceFile").files[0];
@@ -307,6 +379,8 @@ $("resume").onclick = async () => {
 };
 async function boot() {
   try {
+    templateOptions = await api("/api/templates");
+    templateUI();
     const env = await api("/api/system");
     const ready =
       env.ffmpeg && env.node && env.media_installed && env.voice.loaded;

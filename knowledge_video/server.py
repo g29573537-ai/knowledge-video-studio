@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import os
 import shutil
 import uuid
@@ -91,6 +92,37 @@ def create_app(data_dir=None):
     @app.get("/api/template/default")
     def default_template():
         return FileResponse(Path(__file__).parent / "templates/default.html")
+
+    @app.get("/api/templates")
+    def templates():
+        result = []
+        for manifest in sorted((data / "templates").glob("*/template.json")):
+            try:
+                entry = json.loads(manifest.read_text())
+                path = (manifest.parent / entry["file"]).resolve()
+                if (
+                    not path.is_relative_to(manifest.parent.resolve())
+                    or not path.is_file()
+                ):
+                    continue
+                result.append(
+                    {
+                        "id": "local-" + manifest.parent.name,
+                        "name": str(entry["name"]),
+                        "description": str(entry.get("description", "本机模板")),
+                        "path": str(path),
+                    }
+                )
+            except (OSError, ValueError, KeyError, TypeError):
+                continue
+        return result + [
+            {
+                "id": "default",
+                "name": "通用教学",
+                "description": "黑底 · 蓝色强调 · 简洁排版",
+                "path": "",
+            }
+        ]
 
     @app.get("/api/jobs")
     def list_jobs():

@@ -10,6 +10,36 @@ from knowledge_video.materials import bundle_html, inspect_slides
 HEADERS = {"X-Studio-Client": "1"}
 
 
+def test_local_template_catalog_and_custom_preview(tmp_path):
+    folder = tmp_path / "templates" / "brand"
+    folder.mkdir(parents=True)
+    (folder / "slides.html").write_text('<section id="one">My brand</section>')
+    (folder / "template.json").write_text(
+        json.dumps({"name": "Zero2Quant", "file": "slides.html"})
+    )
+    with TestClient(create_app(tmp_path)) as client:
+        catalog = client.get("/api/templates").json()
+        assert [t["id"] for t in catalog] == ["local-brand", "default"]
+        assert catalog[0]["path"] == str(folder / "slides.html")
+        preview = client.post(
+            "/api/slides/inspect", headers=HEADERS, json={"path": catalog[0]["path"]}
+        )
+        assert preview.status_code == 200
+        assert "My brand" in client.get(preview.json()["preview"]).text
+        custom = tmp_path / "custom.html"
+        custom.write_text('<section id="custom">Custom</section>')
+        assert (
+            client.post(
+                "/api/slides/inspect", headers=HEADERS, json={"path": str(custom)}
+            ).status_code
+            == 200
+        )
+        (folder / "template.json").write_text(
+            json.dumps({"name": "invalid", "file": "../../custom.html"})
+        )
+        assert [t["id"] for t in client.get("/api/templates").json()] == ["default"]
+
+
 def test_existing_deck_import_copies_only_referenced_assets(tmp_path):
     root = tmp_path / "user"
     root.mkdir()
