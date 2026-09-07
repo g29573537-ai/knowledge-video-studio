@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh">
+  <meta charset="utf-8" /><style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: #191919;
+      color: #f5f5f5;
+      font-family: Arial, "PingFang SC", "Noto Sans CJK SC", sans-serif;
+      overflow: hidden;
+    }
+    .slide {
+      display: none;
+      position: absolute;
+      width: 1600px;
+      height: 800px;
+      left: 50%;
+      top: 46%;
+      transform: translate(-50%, -50%) scale(var(--scale, 1));
+      padding: 56px 76px;
+    }
+    .slide.active {
+      display: block;
+    }
+    h1 {
+      font-size: 100px;
+      line-height: 1.15;
+      margin: 60px 0 36px;
+    }
+    h2 {
+      font-size: 66px;
+      margin: 16px 0 42px;
+      line-height: 1.2;
+    }
+    h3 {
+      font-size: 36px;
+      color: #5e9eff;
+    }
+    p,
+    li {
+      font-size: 36px;
+      line-height: 1.6;
+    }
+    .blue {
+      color: #5e9eff;
+    }
+    .muted {
+      color: #aab5c4;
+    }
+    .card {
+      padding: 28px;
+      background: #252525;
+      border-left: 5px solid #5e9eff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 34px;
+    }
+    td,
+    th {
+      padding: 18px;
+      text-align: left;
+      border-bottom: 1px solid #505050;
+    }
+    th {
+      background: #29354b;
+    }
+    .brand {
+      position: fixed;
+      top: 24px;
+      left: 32px;
+      font-size: 23px;
+      color: #5e9eff;
+    }
+    footer {
+      position: fixed;
+      bottom: 12px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: #888;
+      font-size: 16px;
+    }
+  </style>
+  <div class="brand">KNOWLEDGE STUDIO</div>
+  <section id="intro" class="slide active">
+    <h1>讲清一个<br /><span class="blue">值得理解的问题</span></h1>
+    <p class="muted">一个例子，一步一步说明。</p>
+  </section>
+  <footer>Knowledge Video Studio</footer>
+  <script>
+    function fit() {
+      document.documentElement.style.setProperty(
+        "--scale",
+        Math.min(innerWidth / 1720, innerHeight / 1080),
+      );
+    }
+    onresize = fit;
+    fit();
+    window.setPresentationState = (s) => {
+      document
+        .querySelectorAll(".slide")
+        .forEach((e) => e.classList.toggle("active", e.id === s.slide));
+      if (!document.getElementById(s.slide)) throw Error("Unknown slide");
+    };
+  </script>
+</html>

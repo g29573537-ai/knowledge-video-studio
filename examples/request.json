@@ -1,0 +1,11 @@
+{
+  "topic": "为什么平均数有时会误导我们",
+  "audience": "初中生",
+  "minutes": 1,
+  "playback_speed": 1.2,
+  "provider": {"kind": "codex"},
+  "voice_path": "/replace/with/your/reference.wav",
+  "reference_text": "请填写录音实际读出的文字，或清空此项使用本地识别",
+  "slides_mode": "generate",
+  "source_notes": "使用明确标注为假设的数据：一千、两千、三千、四千、五万元。合计六万元，均值一万二千元，中位数三千元。只讨论这组教学数据，不推断真实社会收入。"
+}

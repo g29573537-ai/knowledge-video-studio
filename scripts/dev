@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+STUDIO_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+STUDIO_PYTHON=${STUDIO_PYTHON:-python3}
+cd "$STUDIO_ROOT"
+export PYTHONPATH="$STUDIO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
+exec "$STUDIO_PYTHON" -m knowledge_video.cli serve "$@"

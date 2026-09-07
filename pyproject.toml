@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "knowledge-video-studio"
+version = "0.2.0"
+description = "Turn a topic, a reference voice and HTML slides into a narrated knowledge video"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "THIRD_PARTY.md"]
+dependencies = ["fastapi>=0.115", "uvicorn>=0.30", "python-multipart>=0.0.9", "jsonschema>=4", "Pillow>=10", "numpy>=1.26", "soundfile>=0.12", "requests>=2.31"]
+
+[project.optional-dependencies]
+media = ["whisperx>=3.4,<4", "faster-whisper>=1.1,<2"]
+dev = ["pytest>=8", "httpx>=0.27", "build>=1"]
+
+[project.scripts]
+knowledge-video = "knowledge_video.cli:main"
+narration-video = "narration_video.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["knowledge_video*", "narration_video*"]
+[tool.setuptools.package-data]
+knowledge_video = ["static/*", "templates/*"]
+narration_video = ["*.mjs"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

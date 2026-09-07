@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.studio/
+.env
+.env.*
+!.env.example
+*.wav
+*.m4a
+*.mp4
+.DS_Store
+.ruff_cache/

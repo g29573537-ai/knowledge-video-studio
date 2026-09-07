@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Knowledge Video Studio</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a class="brand" href="/"
+        ><span class="brandmark">k<span>v</span></span
+        ><span>Knowledge<br /><b>Video Studio</b></span></a
+      ><button class="nav active" id="newTask">＋ 新建视频</button>
+      <div class="nav-label">最近的制作</div>
+      <div id="jobs" class="jobs"><p class="muted">还没有制作任务</p></div>
+      <div class="sidebar-foot">
+        <i id="healthDot"></i><span id="health">正在检查本地环境</span
+        ><small>v0.2.0</small>
+      </div>
+    </aside>
+    <main>
+      <header class="topbar">
+        <h1>视频制作</h1>
+        <button class="subtle" id="modelToggle">模型与服务设置</button>
+      </header>
+      <div id="toast" role="status" hidden></div>
+      <section id="settings" class="panel" hidden>
+        <div class="panel-head">
+          <h2>模型与服务</h2>
+          <span>所有内容步骤使用同一个模型入口</span>
+        </div>
+        <div class="grid2">
+          <label
+            >模型入口<select id="provider">
+              <option value="codex">Codex CLI · 使用本机登录</option>
+              <option value="external">外部模型 · OpenAI 兼容接口</option>
+            </select></label
+          ><label
+            >模型名<input id="model" placeholder="Codex 留空则沿用用户配置"
+          /></label>
+        </div>
+        <p id="codexHint" class="hint">
+          需要先安装 Codex CLI 并执行 codex
+          login。调用沿用你的账户和模型配置，正常占用账户额度。
+        </p>
+        <div id="externalFields" hidden>
+          <div class="grid2">
+            <label
+              >API Base URL<input
+                id="baseUrl"
+                placeholder="https://your-provider.example/v1" /></label
+            ><label
+              >API Key<input
+                id="apiKey"
+                type="password"
+                autocomplete="off"
+                placeholder="或在服务器设置 KNOWLEDGE_VIDEO_API_KEY"
+            /></label>
+          </div>
+          <div class="grid2">
+            <label
+              >JSON 输出模式<select id="jsonMode">
+                <option value="object">JSON Object · 兼容性优先</option>
+                <option value="schema">JSON Schema · 严格结构</option>
+                <option value="prompt">纯提示词 · 无原生 JSON 模式</option>
+              </select></label
+            ><label class="check"
+              ><input
+                type="checkbox"
+                id="vision"
+              />模型支持图片，用于版式检查</label
+            >
+          </div>
+          <p class="hint">
+            外部模型会接收主题、资料正文、讲稿和模板；启用图片能力后也会接收课件截图。参考录音仅发送给所选语音服务。
+          </p>
+        </div>
+        <div class="grid2">
+          <label
+            >OmniVoice 服务地址<input
+              id="voiceUrl"
+              value="http://127.0.0.1:3900" /></label
+          ><label
+            >已有声音档案 ID（可选）<input
+              id="profileId"
+              placeholder="填写后无需上传参考录音"
+          /></label>
+        </div>
+        <details>
+          <summary>运行环境选项</summary>
+          <div class="grid2">
+            <label
+              >Chrome 路径（可选）<input
+                id="chrome"
+                placeholder="自动查找 Chrome / Chromium" /></label
+            ><label
+              >中文字幕字体路径（可选）<input
+                id="font"
+                placeholder="自动查找 PingFang / Noto CJK"
+            /></label>
+          </div>
+        </details>
+      </section>
+      <div class="workspace">
+        <section class="creation" id="creation">
+          <form id="createForm">
+            <div class="panel topic-panel">
+              <div class="panel-head">
+                <h2><span class="number">01</span> 视频主题</h2>
+              </div>
+              <label class="sr-only" for="topic">视频主题</label
+              ><textarea
+                id="topic"
+                required
+                maxlength="500"
+                placeholder="例如：为什么平均收入涨了，大多数人却没有感觉？"
+              ></textarea>
+              <div class="grid3">
+                <label
+                  >面向谁<input
+                    id="audience"
+                    value="没有相关背景的普通读者" /></label
+                ><label
+                  >目标时长<select id="minutes">
+                    <option value="1">约 1 分钟</option>
+                    <option value="3" selected>约 3 分钟</option>
+                    <option value="5">约 5 分钟</option>
+                    <option value="8">约 8 分钟</option>
+                  </select></label
+                ><label
+                  >口播速度<select id="speed">
+                    <option value="1">1.0 倍 · 自然</option>
+                    <option value="1.2" selected>1.2 倍 · 紧凑</option>
+                    <option value="1.5">1.5 倍 · 快速</option>
+                  </select></label
+                >
+              </div>
+              <details>
+                <summary>补充资料与参考网址</summary>
+                <label
+                  >资料摘要<textarea
+                    id="sourceNotes"
+                    class="small-textarea"
+                    placeholder="已有观点、必须讲清的例子、数据口径或你自己的研究笔记"
+                  ></textarea></label
+                ><label
+                  >参考网址（每行一个）<textarea
+                    id="sourceUrls"
+                    class="small-textarea"
+                    placeholder="https://..."
+                  ></textarea>
+                </label>
+                <p class="hint">
+                  系统会实际抓取资料，再编写讲稿。时长为内容目标，最终以音轨为准。
+                </p>
+              </details>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <h2><span class="number">02</span> 参考声音</h2>
+                <span>支持 WAV、M4A、MP3</span>
+              </div>
+              <label class="upload" for="voiceFile"
+                ><span class="upload-icon">↥</span
+                ><strong id="voiceName">选择参考录音</strong
+                ><span>一段清楚、自然、没有背景音乐的本人或授权录音</span
+                ><input
+                  type="file"
+                  id="voiceFile"
+                  accept=".wav,.m4a,.mp3,.flac,.ogg,.aac"
+              /></label>
+              <details>
+                <summary>本地录音路径与逐字稿</summary>
+                <label
+                  >录音文件路径<input
+                    id="voicePath"
+                    placeholder="/absolute/path/reference.m4a" /></label
+                ><label
+                  >录音逐字稿（留空则自动识别）<textarea
+                    id="referenceText"
+                    class="small-textarea"
+                    placeholder="填写实际读出的内容，不要补上录音中没有的字"
+                  ></textarea>
+                </label>
+              </details>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <h2><span class="number">03</span> 课件</h2>
+              </div>
+              <div class="choice-row">
+                <label class="choice"
+                  ><input
+                    type="radio"
+                    name="slidesMode"
+                    value="generate"
+                    checked
+                  /><span
+                    ><b>生成新课件</b
+                    ><small>参考模板，为本次主题制作</small></span
+                  ></label
+                ><label class="choice"
+                  ><input
+                    type="radio"
+                    name="slidesMode"
+                    value="existing"
+                  /><span
+                    ><b>使用已有 HTML</b
+                    ><small>保留页面，生成对应口播</small></span
+                  ></label
+                >
+              </div>
+              <label id="pathLabel"
+                >参考模板 HTML 路径（可选）<input
+                  id="slidesPath"
+                  placeholder="留空使用内置黑底教学模板"
+              /></label>
+              <div class="preview-row">
+                <button type="button" class="secondary" id="inspect">
+                  检查并预览课件</button
+                ><span id="templateStatus" class="hint"
+                  >已选择内置教学模板</span
+                >
+              </div>
+              <div id="templatePreview" hidden>
+                <iframe title="课件预览" sandbox="allow-scripts"></iframe>
+              </div>
+            </div>
+            <div class="start-row">
+              <button class="primary" type="submit" id="start">开始制作</button>
+            </div>
+          </form>
+        </section>
+        <section id="taskPanel" class="panel task-panel" hidden>
+          <div class="panel-head">
+            <div><h2 id="taskTitle"></h2></div>
+            <button class="secondary" id="backCreate">新建视频</button>
+          </div>
+          <div class="status-row">
+            <span id="taskStatus"></span><span id="taskDuration"></span>
+          </div>
+          <div class="progress"><div id="progressFill"></div></div>
+          <ol id="steps"></ol>
+          <p id="taskMessage" class="task-message"></p>
+          <div class="actions">
+            <button id="cancel" class="secondary">取消任务</button
+            ><button id="resume" class="primary" hidden>继续任务</button>
+          </div>
+          <div id="result" hidden>
+            <video
+              id="resultVideo"
+              controls
+              preload="metadata"
+              playsinline
+            ></video>
+            <div class="downloads">
+              <a id="downloadVideo">下载 MP4 ↗</a
+              ><a id="downloadSrt">字幕 SRT ↗</a
+              ><a id="downloadScript">口播稿 ↗</a
+              ><a id="downloadDesc">文案与资料 ↗</a>
+            </div>
+            <div id="chapters" class="chapters"></div>
+            <p class="hint">
+              技术检查通过后会生成成片。建议发布前完整试听，确认事实、发音和表达符合预期。
+            </p>
+          </div>
+          <details class="log-detail">
+            <summary>查看运行记录</summary>
+            <pre id="logs"></pre>
+          </details>
+        </section>
+      </div>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
