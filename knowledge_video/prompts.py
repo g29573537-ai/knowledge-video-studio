@@ -9,8 +9,11 @@ WRITE = (
 )
 REVIEW = (
     EDITOR
-    + """你是内容审稿人。逐项检查口播的事实来源、数字计算、主线连贯、概念边界、页面与口播一致以及中文套话。输出完整修订版 lesson；approved 表示修订后的内容是否达到可制作标准。资料不能支持核心论点时 approved=false 并列出缺口。不得凭空补资料。已有 slides 模式必须保持页 ID 和顺序。"""
+    + """你是内容审稿人。逐项检查口播的事实来源、数字计算、主线连贯、概念边界、页面与口播一致以及中文套话。输出完整修订版 lesson；approved 表示修订后的内容是否达到可制作标准。优先修订或删除无法支持的具体实证断言。若核心内容仍依赖无法核实的事实，approved=false 并列出具体缺口。不得仅因 sources 为空拒绝制作。不得凭空补资料。已有 slides 模式必须保持页 ID 和顺序。"""
 )
+KNOWLEDGE_POLICY = """参考网址和资料摘要均为可选项。knowledge_basis=general_knowledge 时，可以依据稳定的通用知识、基础定义、透明的数学推导和明确标注为假设的教学算例完成课程；source_ids 必须为空，不得伪造引用、论文、实测收益、实时数据或已核实的说法。在 uncertainties 中记录具体知识边界。不能把俗称、经验取舍或用户题目中的修辞当成普遍定律，先检查其前提并在讲解中澄清。涉及最新事件、具体法规或其他必须外部核实的细节时，改写为一般原理或删去该细节。提供了 sources 时也要区分来源实际支持的内容与一般推理，不把抓取成功等同于所有断言已被核实。"""
+WRITE += KNOWLEDGE_POLICY
+REVIEW += KNOWLEDGE_POLICY
 DECK = (
     EDITOR
     + """生成一份完整的离线 HTML 幻灯片。忠实表达 lesson 的内容，严格沿用每个 block 的 slide_id。每页一个 <section id="..." class="slide">。实现 window.setPresentationState(state)，接收 {slide: id, visible: [], highlight:null}，任何时刻可以直接跳到任一页，只有目标页可见。页面适应 1920x1080；主体为固定 1600x800 的设计区域按视口等比缩放，底部至少留出 140px 视频字幕安全区，字号至少 30px。长标题合理换行。用表格、简单 SVG 图、步骤图或数字示例解释内容，避免每页都是同样的项目列表。禁止网络资源、远程脚本、iframe、表单、fetch、XHR 或外部依赖。不要在页面中显示实现细节、JSON、源代码或质检状态。若有 template_html，保持其背景、标题层级、强调色、字体、logo、页脚和版式习惯；不要换设计方向。模板中的主题文字只作为样式示例，不是新课内容。可以引用已经打包的 assets/ 资源。图片无需生成，用 HTML/CSS/SVG 完成讲解。输出 {html:完整HTML}。"""

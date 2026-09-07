@@ -125,17 +125,26 @@ class Workflow:
                     }
                 )
             atomic_json(p / "source_errors.json", errors)
-            if not sources:
-                raise RuntimeError(
-                    "未能获取有效资料。请添加一个可访问的参考网址或资料摘要后新建任务。"
-                )
             atomic_json(p / "sources.json", sources)
+        knowledge_basis = "reference_materials" if sources else "general_knowledge"
+        if not sources:
+            self.notify("未提供或获取参考资料，按通用知识与明确标注的教学算例继续")
+        atomic_json(
+            p / "research_basis.json",
+            {
+                "mode": knowledge_basis,
+                "source_count": len(sources),
+                "fetched_source_count": sum(bool(s.get("url")) for s in sources),
+                "externally_verified": False,
+            },
+        )
         context = {
             "topic": r.topic,
             "audience": r.audience,
             "minutes": r.minutes,
             "plan": plan.model_dump(),
             "sources": sources,
+            "knowledge_basis": knowledge_basis,
             "existing_slides": info["slides"] if info else None,
         }
         self.step("script", "撰写口播并审查事实和教学顺序")
@@ -149,6 +158,10 @@ class Workflow:
         if not review.approved:
             raise RuntimeError("内容审查未通过：" + "；".join(review.issues))
         lesson = review.lesson
+        if not sources:
+            notice = "本课依据模型通用知识编写，未使用外部核验资料。"
+            if notice not in lesson.uncertainties:
+                lesson.uncertainties.append(notice)
         validate_lesson(lesson, info)
         valid_sources = {s["id"] for s in sources}
         if any(set(b.source_ids) - valid_sources for b in lesson.blocks):
@@ -492,6 +505,7 @@ class Workflow:
                 "duration": report["duration"],
                 "subtitle_characters_match": True,
                 "sources": len(sources),
+                "knowledge_basis": knowledge_basis,
                 "uncertainties": lesson.uncertainties,
                 "human_listening_review": "recommended",
                 "video_sha256": file_hash(p / "build/video.mp4"),
@@ -503,9 +517,13 @@ class Workflow:
             + "\n\n"
             + lesson.description
             + "\n\n## 参考资料\n\n"
-            + "\n".join(
-                "- " + s["title"] + (" " + s["url"] if s["url"] else "")
-                for s in sources
+            + (
+                "\n".join(
+                    "- " + s["title"] + (" " + s["url"] if s["url"] else "")
+                    for s in sources
+                )
+                if sources
+                else "本课依据模型通用知识编写，未使用外部核验资料。"
             )
             + "\n\n## 章节\n\n"
             + "\n".join(
