@@ -335,6 +335,26 @@ function renderTask(job) {
       $(id).download = path.split("/").pop();
     }
     $("taskDuration").textContent = fmt(job.result.duration) + " · 1080p";
+    const publishing = job.publishing || {};
+    const busy = ["running", "queued"].includes(publishing.status);
+    $("generatePublishing").disabled = busy;
+    $("generatePublishing").textContent = busy ? "正在生成…" : job.publication ? "重新生成封面与简介" : "生成封面与简介";
+    $("publishingStatus").textContent = publishing.message || "为这条视频生成独立封面和发布简介。";
+    $("publishingAssets").hidden = !job.publication;
+    if (job.publication) {
+      const asset = job.publication;
+      const preview = $("coverPreview");
+      const version = job.id + "/" + asset.version;
+      if (preview.dataset.version !== version) {
+        preview.src = base + asset.cover_path;
+        preview.dataset.version = version;
+        $("publishingDescription").value = asset.description;
+      }
+      $("downloadCover").href = base + asset.cover_path;
+      $("downloadCover").download = "cover.png";
+      $("downloadPublishingDescription").href = base + asset.description_path;
+      $("downloadPublishingDescription").download = "description.txt";
+    }
   }
 }
 function fmt(seconds) {
@@ -466,3 +486,19 @@ async function boot() {
   }, 2500);
 }
 boot();
+
+$("generatePublishing").onclick = async () => {
+  const id = active;
+  $("generatePublishing").disabled = true;
+  try {
+    const job = await api("/api/jobs/" + id + "/publishing", {
+      method: "POST", body: JSON.stringify({api_key: $("apiKey").value}),
+    });
+    renderTask(job);
+  } catch (e) { toast(e.message); }
+  finally { if (active === id) renderTask(await api("/api/jobs/" + id)); }
+};
+$("copyDescription").onclick = async () => {
+  try { await navigator.clipboard.writeText($("publishingDescription").value); toast("简介已复制"); }
+  catch { $("publishingDescription").focus(); $("publishingDescription").select(); toast("请按 Ctrl/Cmd+C 复制简介"); }
+};

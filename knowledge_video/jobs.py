@@ -24,6 +24,9 @@ class Jobs:
         self.secrets = {}
         for path in self.root.glob("*/status.json"):
             state = json.loads(path.read_text())
+            if state.get("publishing", {}).get("status") in ("running", "queued"):
+                state["publishing"] = {"status": "interrupted", "message": "服务重启，请重新生成封面与简介"}
+                atomic_json(path, state)
             if state["status"] in ("running", "queued"):
                 state.update(status="interrupted", message="服务重启中断，可继续任务")
                 atomic_json(path, state)
@@ -103,6 +106,43 @@ class Jobs:
                 raise ValueError("任务当前未运行")
             self.running[id].set()
         return {"ok": True}
+
+    def publish_assets(self, id, key=None):
+        with self.lock:
+            state = self.get(id)
+            if state["status"] != "completed":
+                raise ValueError("请先完成视频制作")
+            if id in self.running:
+                raise ValueError("封面与简介正在生成")
+            request = JobRequest.model_validate_json((self.path(id) / "request.json").read_text())
+            request.provider.api_key = key or self.secrets.get(id, "")
+            if key:
+                self.secrets[id] = key
+            cancel = threading.Event()
+            self.running[id] = cancel
+            state["publishing"] = {"status": "queued", "message": "等待生成封面与简介"}
+            atomic_json(self.path(id) / "status.json", state)
+            self.pool.submit(self._publish_assets, id, request, cancel)
+            return state
+
+    def _publish_assets(self, id, request, cancel):
+        def update(message, **extra):
+            with self.lock:
+                state = self.get(id)
+                state["publishing"] = {"status": "running", "message": str(message)[-1000:], **extra}
+                atomic_json(self.path(id) / "status.json", state)
+        try:
+            update("生成封面与简介")
+            result = Workflow(self.path(id), request, update, cancel).make_publication()
+            with self.lock:
+                state = self.get(id)
+                state.update(publication=result, publishing={"status": "completed", "message": "封面与简介已生成"})
+                atomic_json(self.path(id) / "status.json", state)
+        except Exception as exc:
+            update(str(exc), status="failed")
+        finally:
+            with self.lock:
+                self.running.pop(id, None)
 
     def _run(self, id, request, cancel):
         p = self.path(id)

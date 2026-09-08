@@ -556,12 +556,28 @@ class Workflow:
             )
         )
         (p / "description.md").write_text(desc, encoding="utf-8")
+        try:
+            publication = self.make_publication()
+            self.notify("封面与简介已生成", publication=publication,
+                        publishing={"status": "completed", "message": "封面与简介已生成"})
+        except Cancelled:
+            raise
+        except Exception as exc:
+            # A publishing-asset failure must not discard an already checked video.
+            self.notify("视频已完成，封面与简介可单独重试", publishing={
+                "status": "failed", "message": str(exc)[-1000:]})
         return {
             "title": lesson.title,
             "duration": report["duration"],
             "chapters": chapters,
             "quality": "技术检查通过；建议发布前完整试听",
         }
+
+    def make_publication(self):
+        from .publishing import generate
+
+        self.notify("生成封面文案与视频简介")
+        return generate(self)
 
 
 def chrome_path():

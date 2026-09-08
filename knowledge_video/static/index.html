@@ -307,6 +307,14 @@
               ><a id="downloadDesc">文案与资料 ↗</a>
             </div>
             <div id="chapters" class="chapters"></div>
+            <section class="publishing-panel">
+              <div class="publishing-heading"><h2>封面与简介</h2><button id="generatePublishing" class="secondary">生成封面与简介</button></div>
+              <p id="publishingStatus" class="hint" role="status"></p>
+              <div id="publishingAssets" class="publishing-grid" hidden>
+                <div><img id="coverPreview" alt="视频封面" class="cover-preview"><div class="downloads"><a id="downloadCover">下载封面 PNG ↗</a></div></div>
+                <div><label for="publishingDescription">发布简介</label><textarea id="publishingDescription" rows="12" readonly></textarea><div class="publishing-actions"><button id="copyDescription" class="secondary">复制简介</button><a id="downloadPublishingDescription">下载 TXT ↗</a></div></div>
+              </div>
+            </section>
             <p class="hint">
               技术检查通过后会生成成片。建议发布前完整试听，确认事实、发音和表达符合预期。
             </p>

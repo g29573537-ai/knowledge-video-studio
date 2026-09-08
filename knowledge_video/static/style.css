@@ -669,3 +669,12 @@ pre {
   height: 7px;
   accent-color: var(--accent);
 }
+
+.publishing-panel{margin-top:28px;padding-top:24px;border-top:1px solid #e2e8f0}
+.publishing-heading,.publishing-actions{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.publishing-heading h2{margin:0;font-size:18px}
+.publishing-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:18px}
+.publishing-grid[hidden]{display:none}
+.cover-preview{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;border-radius:8px;background:#f1f5f9;border:1px solid #e2e8f0}
+#publishingDescription{width:100%;min-height:260px;resize:vertical;line-height:1.6;margin:8px 0 12px}
+@media(max-width:900px){.publishing-grid{grid-template-columns:1fr}.publishing-heading{align-items:flex-start;flex-direction:column}}

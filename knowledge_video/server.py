@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import re
 import shutil
 import uuid
 from pathlib import Path
@@ -197,6 +198,15 @@ def create_app(data_dir=None):
         except ValueError as e:
             raise HTTPException(409, str(e))
 
+    @app.post("/api/jobs/{id}/publishing")
+    def publishing(id: str, body: dict):
+        try:
+            return jobs.publish_assets(id, body.get("api_key"))
+        except (KeyError, FileNotFoundError):
+            raise HTTPException(404, "任务不存在")
+        except ValueError as e:
+            raise HTTPException(409, str(e))
+
     @app.post("/api/jobs/{id}/resume")
     def resume(id: str, body: dict):
         try:
@@ -260,7 +270,8 @@ def create_app(data_dir=None):
     def artifact(id: str, name: str):
         base = jobs.path(id)
         path = (base / name).resolve()
-        allowed = name in PUBLIC or name.startswith(("assets/", "build/slides/"))
+        allowed = (name in PUBLIC or name.startswith(("assets/", "build/slides/"))
+                   or re.fullmatch(r"publishing/[0-9a-f]{32}/(?:cover\.png|description\.(?:txt|md)|metadata\.json)", name))
         if not allowed or not path.is_relative_to(base) or not path.is_file():
             raise HTTPException(404)
         return FileResponse(path, headers={"Cache-Control": "no-cache"})
