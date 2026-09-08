@@ -60,6 +60,11 @@ async function main(){
       await settlePage(client);
       const geometry=await evaluate(client,`(()=>{
         const out=[],seen=new Set(),walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+        // CSS Overflow 3, viewport propagation: root overflow clips the viewport;
+        // body overflow does too when both root axes are visible (no containment).
+        // Absolutely positioned slides can leave the body's own box at height 0.
+        const root=document.documentElement,rootStyle=getComputedStyle(root),bodyStyle=getComputedStyle(document.body);
+        const bodyOverflowPropagates=root.tagName==='HTML'&&document.body.parentElement===root&&rootStyle.overflowX==='visible'&&rootStyle.overflowY==='visible'&&bodyStyle.display!=='none'&&rootStyle.contain==='none'&&bodyStyle.contain==='none';
         let node;while(node=walker.nextNode()){
           const text=node.textContent.trim(),el=node.parentElement;if(!text||!el||['SCRIPT','STYLE','NOSCRIPT'].includes(el.tagName))continue;
           const box=el.getBoundingClientRect(),style=getComputedStyle(el);if(box.width<2||box.height<2||style.visibility==='hidden'||style.display==='none')continue;
@@ -68,6 +73,7 @@ async function main(){
           for(const r of range.getClientRects()){
             let problem='';if(r.left< -3||r.right>innerWidth+3||r.top< -3||r.bottom>innerHeight+3)problem='outside viewport';
             for(const [p,s,b] of parents){
+              if(p===root||(p===document.body&&bodyOverflowPropagates))continue; // viewport checked above
               if((['hidden','clip','auto','scroll'].includes(s.overflowX)&&(r.left<b.left-3||r.right>b.right+3))||(['hidden','clip','auto','scroll'].includes(s.overflowY)&&(r.top<b.top-3||r.bottom>b.bottom+3))){problem='text clipped by '+p.tagName.toLowerCase()+(p.id?'#'+p.id:'')+'; text bounds '+JSON.stringify({left:r.left,right:r.right,top:r.top,bottom:r.bottom})+'; container bounds '+JSON.stringify({left:b.left,right:b.right,top:b.top,bottom:b.bottom});break;}
             }
             if(problem&&!seen.has(text+problem)){seen.add(text+problem);out.push({text:text.slice(0,100),problem});}
