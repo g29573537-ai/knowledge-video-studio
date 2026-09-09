@@ -1,0 +1,46 @@
+{
+  "title": "为什么平均数会受极端值影响",
+  "script": "narration.md",
+  "deck": "slides.html",
+  "build_dir": "build",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "playback_speed": 1.2,
+  "pause_between_blocks": 0.45,
+  "voice": {
+    "base_url": "http://127.0.0.1:3900",
+    "model": "omnivoice",
+    "mode": "clone",
+    "profile_id": "REPLACE_WITH_YOUR_PROFILE_ID",
+    "language": "zh",
+    "speed": 1.0,
+    "timeout_seconds": 900
+  },
+  "alignment": {
+    "language": "zh",
+    "device": "cpu",
+    "threads": 4,
+    "min_char_score": 0.1,
+    "min_coverage": 0.9,
+    "min_cue_score": 0.15
+  },
+  "asr_model": "small",
+  "subtitle": {
+    "font_size": 48,
+    "max_chars": 25,
+    "bottom": 50
+  },
+  "cues": {
+    "opening": {
+      "slide": "opening",
+      "visible": [],
+      "highlight": null
+    },
+    "change": {
+      "slide": "change",
+      "visible": [],
+      "highlight": null
+    }
+  }
+}

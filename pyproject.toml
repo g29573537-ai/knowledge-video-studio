@@ -5,11 +5,17 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "knowledge-video-studio"
 version = "0.2.0"
+readme = "README.md"
 description = "Turn a topic, a reference voice and HTML slides into a narrated knowledge video"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "THIRD_PARTY.md"]
 dependencies = ["fastapi>=0.115", "uvicorn>=0.30", "python-multipart>=0.0.9", "jsonschema>=4", "Pillow>=10", "numpy>=1.26", "soundfile>=0.12", "requests>=2.31"]
+
+[project.urls]
+Homepage = "https://github.com/khakhasshi/knowledge-video-studio"
+Repository = "https://github.com/khakhasshi/knowledge-video-studio"
+Issues = "https://github.com/khakhasshi/knowledge-video-studio/issues"
 
 [project.optional-dependencies]
 media = ["whisperx>=3.4,<4", "faster-whisper>=1.1,<2"]

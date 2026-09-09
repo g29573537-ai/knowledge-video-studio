@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="zh"><meta charset="utf-8"><title>平均数与极端值 · 示例</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#191919;color:white;font-family:Arial,"PingFang SC","Noto Sans CJK SC",sans-serif}#canvas{position:absolute;width:1920px;height:1080px;transform-origin:top left}section{position:absolute;inset:0;padding:160px 130px;display:none}section.active{display:block}h1{font-size:82px;line-height:1.35;margin:0 0 70px}p{font-size:48px;line-height:1.6;margin:25px 0}strong{color:#5e9eff}small{font-size:26px;color:#b5bdc8}footer{position:absolute;bottom:24px;width:100%;text-align:center;color:#aeb8c7;font-size:23px}
+</style><div id="canvas">
+<section id="opening" class="active"><h1>五个数的平均数</h1><p>1，2，3，4，5</p><p>总和 15 ÷ 5 = <strong>平均数 3</strong></p><p>中间那个数 = <strong>中位数 3</strong></p><small>教学假设</small></section>
+<section id="change"><h1>只改变最后一个数</h1><p>1，2，3，4，50</p><p>总和 60 ÷ 5 = <strong>平均数 12</strong></p><p>中间那个数仍为 <strong>3</strong></p><small>教学假设；不推断真实人口分布</small></section>
+<footer>Knowledge Video Studio · Public example</footer></div>
+<script>window.setPresentationState=s=>document.querySelectorAll('section').forEach(e=>e.classList.toggle('active',e.id===s.slide));function fit(){const c=document.querySelector('#canvas'),s=Math.min(innerWidth/1920,innerHeight/1080);c.style.transform=`scale(${s})`;c.style.left=(innerWidth-1920*s)/2+'px';c.style.top=(innerHeight-1080*s)/2+'px'}addEventListener('resize',fit);fit();</script></html>
