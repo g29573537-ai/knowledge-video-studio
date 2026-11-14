@@ -57,6 +57,10 @@ class Block(BaseModel):
     headline: str
     points: list[str]
     source_ids: list[str]
+    visual_role: Literal[
+        "hero", "explanatory_core", "secondary", "bridge", "background"
+    ] = "hero"
+    semantic_version: int = 1
 
 
 class Lesson(BaseModel):
