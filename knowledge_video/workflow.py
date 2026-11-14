@@ -33,6 +33,7 @@ from .models import (
 )
 from .providers import Provider
 from .runtime import Cancelled, atomic_json, run_process
+from .run_state import fingerprint_inputs
 
 
 class Workflow:
@@ -56,8 +57,28 @@ class Workflow:
 
     def llm(self, name, instruction, payload, model, images=None):
         target = self.root / (name + ".json")
-        if target.exists():
-            return model.model_validate_json(target.read_text())
+        fingerprint_target = self.root / (name + ".fingerprint.json")
+        current_fingerprint = fingerprint_inputs(
+            {
+                "instruction": instruction,
+                "payload": payload,
+                "schema": getattr(model, "model_json_schema", lambda: {})(),
+                "model": getattr(self.request.provider, "model", ""),
+                "provider_kind": getattr(self.request.provider, "kind", ""),
+                "temperature": getattr(self.request.provider, "temperature", None),
+                "images": images,
+            }
+        )
+        if target.exists() and fingerprint_target.exists():
+            try:
+                saved = json.loads(fingerprint_target.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                saved = {}
+            if saved.get("fingerprint") == current_fingerprint:
+                try:
+                    return model.model_validate_json(target.read_text(encoding="utf-8"))
+                except Exception:
+                    pass
         self.notify("模型正在处理 " + name)
         error = None
         for attempt in range(self.request.max_repairs + 1):
@@ -69,6 +90,7 @@ class Workflow:
                     images,
                 )
                 atomic_json(target, answer.model_dump())
+                atomic_json(fingerprint_target, {"fingerprint": current_fingerprint})
                 return answer
             except (ValueError, KeyError, TypeError, jsonschema.ValidationError) as e:
                 error = str(e)

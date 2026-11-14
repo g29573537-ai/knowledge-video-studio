@@ -9,6 +9,7 @@ import uuid
 from pathlib import Path
 
 from .models import JobRequest
+from .run_state import RunStore
 from .runtime import Cancelled, atomic_json
 from .workflow import Workflow
 
@@ -146,6 +147,11 @@ class Jobs:
 
     def _run(self, id, request, cancel):
         p = self.path(id)
+        store = RunStore(p)
+        try:
+            store.start({"request": request.model_dump()})
+        except Exception:
+            pass
 
         def update(message, stage=None, **extra):
             with self.lock:
@@ -166,6 +172,10 @@ class Jobs:
                     ]
                 )[-250:]
                 atomic_json(p / "status.json", state)
+                try:
+                    RunStore(p).heartbeat(state.get("stage"))
+                except Exception:
+                    pass
 
         try:
             update("任务开始", status="running")
@@ -173,6 +183,10 @@ class Jobs:
             if cancel.is_set():
                 raise Cancelled("任务已取消")
             update("视频已完成", stage="completed", status="completed", result=result)
+            try:
+                RunStore(p).complete()
+            except Exception:
+                pass
         except Cancelled:
             update("任务已取消，可继续", status="cancelled")
         except Exception as e:
