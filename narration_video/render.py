@@ -179,6 +179,9 @@ def export_video(cfg, timeline, slides):
         raise ValueError("Export duration deviates from the narration clock")
     if abs(float(audio.get("duration", 0)) - timeline["duration"]) > 0.1:
         raise ValueError("Export truncated narration")
+    from .qc import run_qc
+
+    run_qc(cfg, timeline, tmp)
     tmp.replace(target)
     write_json(
         cfg["build"] / "export_report.json",
