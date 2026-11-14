@@ -37,7 +37,7 @@ async function settlePage(client){
 async function main(){
   const cfg=JSON.parse(await readFile(process.argv[2],'utf8'));
   await mkdir(cfg.output,{recursive:true});const profile=await mkdtemp(path.join(tmpdir(),'narration-chrome-'));
-  const chrome=spawn(cfg.chrome,['--headless=new','--hide-scrollbars','--disable-gpu','--no-first-run','--no-default-browser-check','--disable-background-networking','--allow-file-access-from-files','--remote-debugging-port=0',`--user-data-dir=${profile}`,'about:blank'],{stdio:'ignore'});
+  const chrome=spawn(cfg.chrome,['--headless=new','--no-sandbox','--disable-setuid-sandbox','--hide-scrollbars','--disable-gpu','--no-first-run','--no-default-browser-check','--disable-background-networking','--allow-file-access-from-files','--remote-debugging-port=0',`--user-data-dir=${profile}`,'about:blank'],{stdio:'ignore'});
   let spawnError,client;chrome.on('error',e=>spawnError=e);
   try{
     let port;

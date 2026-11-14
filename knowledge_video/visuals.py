@@ -185,18 +185,13 @@ def _beat_set(beat: Any, key: str, value: Any) -> None:
 
 def _collect_beats(value: Any) -> list[Any]:
     if isinstance(value, dict):
-        if "beats" in value:
-            collected = []
-            for scene in value.get("scenes", [value]):
-                collected.extend(_collect_beats(scene))
-            if value.get("beats"):
-                collected.extend(value["beats"])
-            return collected
         if "scenes" in value:
             collected = []
-            for scene in value["scenes"]:
+            for scene in value.get("scenes", []):
                 collected.extend(_collect_beats(scene))
             return collected
+        if "beats" in value:
+            return list(value.get("beats") or [])
     if isinstance(value, list):
         return list(value)
     beats = getattr(value, "beats", None)

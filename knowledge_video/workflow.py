@@ -33,7 +33,11 @@ from .models import (
 )
 from .providers import Provider
 from .runtime import Cancelled, atomic_json, run_process
-from .run_state import fingerprint_inputs
+from .media_providers import get_image_provider
+from .media_rights import MediaRightsRegistry
+from .run_state import RunStore, fingerprint_inputs
+from .semantic_timeline import build_semantic_timeline
+from .visuals import auto_fill_secondary_visuals
 
 
 class Workflow:
@@ -201,6 +205,19 @@ class Workflow:
         if any(set(b.source_ids) - valid_sources for b in lesson.blocks):
             raise ValueError("讲稿引用了不存在的资料编号")
         atomic_json(p / "lesson.json", lesson.model_dump())
+        _provider_name, _provider = get_image_provider("local", "procedural")
+        semantic_timeline = build_semantic_timeline(lesson.blocks)
+        atomic_json(p / "semantic_timeline.json", semantic_timeline)
+        media_rights = MediaRightsRegistry()
+        auto_fill_secondary_visuals(
+            semantic_timeline,
+            registry=media_rights,
+            output_dir=p / "build" / "generated",
+            visual_config=r.visual,
+        )
+        atomic_json(p / "media_rights.json", media_rights.to_dict())
+        RunStore(p).start({"request": r.model_dump()})
+        RunStore(p).record_stage("lesson", artifacts={"lesson.json": p / "lesson.json"})
         (p / "narration.md").write_text(
             "# "
             + lesson.title
