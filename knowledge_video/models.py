@@ -17,6 +17,16 @@ class ProviderConfig(BaseModel):
     reasoning_effort: Literal["", "low", "high", "max"] = ""
 
 
+class VisualConfig(BaseModel):
+    visual_mode: Literal["procedural", "local_diffusion", "remote_api"] = "procedural"
+    ai_fallback_enabled: bool = False
+    allowed_roles: list[str] = Field(default_factory=lambda: ["secondary", "bridge", "background"])
+    diffusion_available_override: bool | None = None
+    remote_provider: str = ""
+    remote_model: str = ""
+    timeout: int = Field(default=120, ge=1, le=3600)
+
+
 class JobRequest(BaseModel):
     topic: str = Field(min_length=2, max_length=500)
     audience: str = Field(default="没有相关背景的普通读者", max_length=300)
@@ -41,6 +51,7 @@ class JobRequest(BaseModel):
     chrome: str = ""
     subtitle_font: str = ""
     max_repairs: int = Field(default=2, ge=0, le=4)
+    visual: VisualConfig = Field(default_factory=VisualConfig)
 
 
 class ResearchPlan(BaseModel):
