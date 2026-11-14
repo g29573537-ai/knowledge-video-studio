@@ -40,3 +40,11 @@ Also required for a real CosyVoice3 run:
 ## Status of the scaffold
 
 The orchestration path is unit-tested with a fake Kaggle CLI. The CosyVoice3 inference itself is not validated in this environment because Kaggle credentials and a CosyVoice kernel are unavailable.
+
+## Real Kaggle run attempt (2026-11-14)
+
+- Credentials are now available; `KAGGLE_API_TOKEN` works (`kaggle kernels list` succeeded).
+- Pushed kernel: `forts845/kvs-cosyvoice3-smoke` with the OpenMontage CosyVoice3 audit script as `run.py`.
+- Polling result: kernel remained `KernelWorkerStatus.QUEUED` for more than 18 minutes.
+- No output files were produced, so no audio file or ffprobe duration exists.
+- Process was stopped after the long queue wait; no partial result is reported as success.
