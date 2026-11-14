@@ -43,6 +43,7 @@ class JobRequest(BaseModel):
     reference_text: str = ""
     profile_id: str = ""
     voice_url: str = "http://127.0.0.1:3900"
+    voice_backend: Literal["omnivoice", "kaggle_cosyvoice3"] = "omnivoice"
     slides_mode: Literal["generate", "existing"] = "generate"
     slides_path: str = ""
     template_path: str = ""

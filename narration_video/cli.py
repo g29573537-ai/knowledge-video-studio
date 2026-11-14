@@ -22,9 +22,17 @@ def synthesize(cfg):
     import numpy as np
     import soundfile as sf
 
-    service = OmniVoice(cfg["voice"])
-    identity = service.identity()
-    service.wait_ready()
+    if cfg["voice"].get("backend") == "kaggle_cosyvoice3":
+        from knowledge_video.media_providers.kaggle_voice import KaggleVoice
+
+        service = KaggleVoice(cfg["voice"])
+        identity = service.identity() if hasattr(service, "identity") else {}
+        if hasattr(service, "wait_ready"):
+            service.wait_ready()
+    else:
+        service = OmniVoice(cfg["voice"])
+        identity = service.identity()
+        service.wait_ready()
     cache = cfg["build"] / "voice_cache"
     normalized = cfg["build"] / "audio"
     normalized.mkdir(parents=True, exist_ok=True)

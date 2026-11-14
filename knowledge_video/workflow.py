@@ -316,6 +316,7 @@ class Workflow:
                 "reference_language": r.reference_language,
                 "speed": 1.0,
                 "timeout_seconds": 900,
+                "backend": r.voice_backend,
             },
             "alignment": {
                 "language": r.language,

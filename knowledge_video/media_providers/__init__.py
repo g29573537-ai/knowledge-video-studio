@@ -16,9 +16,11 @@ from .registry import (
 )
 from .fake import FakeImageProvider
 from .local import LocalProceduralImageProvider
+from .kaggle_voice import KaggleVoice
 from . import bootstrap  # noqa: F401
 
 __all__ = [
+    "KaggleVoice",
     "AssetResult",
     "ImageRequest",
     "VideoRequest",
