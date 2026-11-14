@@ -40,3 +40,17 @@ No final MP4 was produced. The run stopped at the first LLM stage because this C
 - No mock LLM output was substituted.
 - No placeholder or fixture media was used as a successful result.
 - No partial result is reported as a completed video.
+
+## LLM provider verification (2026-11-14)
+
+The external OpenAI-compatible provider now works with Kilo Gateway:
+
+- base_url: `https://api.kilo.ai/api/gateway`
+- model: `kilo-auto/free`
+- A direct `Provider.generate(..., ResearchPlan)` call succeeded and returned a valid structured research plan.
+
+## Remaining blocker for a full MP4
+
+OmniVoice cannot stay loaded on this CPU-only Codespace: the service repeatedly reaches about 38-44% while loading TTS weights and then stops responding. Therefore `Workflow.run()` cannot pass its preflight voice check, and no MP4 is produced.
+
+No video, `qc_report.json`, or `quality.json` was generated. No placeholder or fixture media was used as a successful result.
