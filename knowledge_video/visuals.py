@@ -168,3 +168,125 @@ def generate_scene_visual(
     )
     sidecar.write_text(json.dumps(result.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
     return result
+
+
+def _beat_get(beat: Any, key: str, default: Any = None) -> Any:
+    if isinstance(beat, dict):
+        return beat.get(key, default)
+    return getattr(beat, key, default)
+
+
+def _beat_set(beat: Any, key: str, value: Any) -> None:
+    if isinstance(beat, dict):
+        beat[key] = value
+    else:
+        setattr(beat, key, value)
+
+
+def _collect_beats(value: Any) -> list[Any]:
+    if isinstance(value, dict):
+        if "beats" in value:
+            collected = []
+            for scene in value.get("scenes", [value]):
+                collected.extend(_collect_beats(scene))
+            if value.get("beats"):
+                collected.extend(value["beats"])
+            return collected
+        if "scenes" in value:
+            collected = []
+            for scene in value["scenes"]:
+                collected.extend(_collect_beats(scene))
+            return collected
+    if isinstance(value, list):
+        return list(value)
+    beats = getattr(value, "beats", None)
+    if beats is not None:
+        return list(beats)
+    return [value]
+
+
+def auto_fill_secondary_visuals(
+    beats_or_timeline: Any,
+    *,
+    registry: Any = None,
+    visual_config: Any = None,
+    output_dir: str | Path = ".",
+    prompt_builder: Any = None,
+    seed: int | None = None,
+    width: int = 512,
+    height: int = 512,
+) -> list[Any]:
+    """Generate visuals only for secondary/bridge/background beats."""
+
+    from .media_rights import MediaRightsRegistry
+
+    if registry is None:
+        registry = MediaRightsRegistry()
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    allowed_roles = getattr(visual_config, "allowed_roles", None)
+    if allowed_roles is None and isinstance(visual_config, dict):
+        allowed_roles = visual_config.get("allowed_roles", ["secondary", "bridge", "background"])
+    if allowed_roles is None:
+        allowed_roles = ["secondary", "bridge", "background"]
+    visual_mode = getattr(visual_config, "visual_mode", None)
+    if visual_mode is None and isinstance(visual_config, dict):
+        visual_mode = visual_config.get("visual_mode", "procedural")
+    if visual_mode is None:
+        visual_mode = "procedural"
+    ai_fallback_enabled = getattr(visual_config, "ai_fallback_enabled", False)
+    if isinstance(visual_config, dict):
+        ai_fallback_enabled = visual_config.get("ai_fallback_enabled", ai_fallback_enabled)
+
+    results = []
+    for beat in _collect_beats(beats_or_timeline):
+        role = str(_beat_get(beat, "visual_role", "hero"))
+        if role not in allowed_roles:
+            results.append(None)
+            continue
+        beat_id = str(_beat_get(beat, "id", _beat_get(beat, "cue_id", "beat")))
+        prompt = prompt_builder(beat) if callable(prompt_builder) else str(_beat_get(beat, "visual_object") or _beat_get(beat, "phrase") or beat_id)
+        output = output_dir / f"{beat_id.replace(':', '_')}.png"
+        result = generate_scene_visual(
+            prompt,
+            output=output,
+            visual_mode=visual_mode,
+            ai_fallback_enabled=ai_fallback_enabled,
+            scene_role=role,
+            allowed_roles=allowed_roles,
+            width=width,
+            height=height,
+            seed=seed,
+            config=visual_config,
+        )
+        _beat_set(beat, "asset_ref", output.name)
+        media_source = _beat_get(beat, "media_source", None)
+        if isinstance(media_source, dict):
+            media_source["asset_ref"] = output.name
+            media_source.setdefault("type", "generated")
+            _beat_set(beat, "media_source", media_source)
+        elif media_source is not None:
+            setattr(media_source, "asset_ref", output.name)
+        else:
+            _beat_set(beat, "media_source", {"type": "generated", "asset_ref": output.name})
+
+        from narration_video.core import file_hash
+
+        registry.register_generated(
+            asset_id=f"generated:{beat_id}",
+            generation_provider=result.backend,
+            model_id=result.model or result.backend,
+            model_version="",
+            weights_license_url="",
+            provider_terms_url="",
+            terms_checked_at="",
+            prompt=prompt,
+            prompt_sha256=result.metadata.get("prompt_sha256", ""),
+            seed=seed,
+            local_path=str(output),
+            sha256=file_hash(output),
+            size_bytes=output.stat().st_size,
+            mime_type="image/png",
+        )
+        results.append(result)
+    return results
