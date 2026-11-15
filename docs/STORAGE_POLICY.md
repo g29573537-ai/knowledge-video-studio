@@ -19,3 +19,14 @@
 
 5. Verification before cleanup: never clean disk while artifacts from a run are
    still under review. Verify first, cleanup second, never in parallel or reverse.
+
+## Thresholds and reporting
+
+- If available space is below 5 GB or usage is above 80%, stop before installing,
+  downloading, or creating environments. Report to the owner and propose cleanup first.
+- After every major pipeline step (TTS, alignment, render), run `df -h` again and
+  record the result.
+- Every final pilot/video report must include `df -h /workspaces` before and after.
+- Before deleting anything, verify it is not a dependency of a mandatory step.
+  Forced alignment's acoustic model is mandatory; do not delete the environment
+  that provides it without a planned replacement.
