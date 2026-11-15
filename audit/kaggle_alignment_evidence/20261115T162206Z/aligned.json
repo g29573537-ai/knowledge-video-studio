@@ -1,0 +1,226 @@
+{
+  "text": "The sun gives energy to plants.",
+  "duration": 2.76,
+  "chars": [
+    {
+      "char": "T",
+      "start": 0.101,
+      "end": 0.141,
+      "score": 0.707,
+      "valid": true
+    },
+    {
+      "char": "h",
+      "start": 0.141,
+      "end": 0.181,
+      "score": 0.998,
+      "valid": true
+    },
+    {
+      "char": "e",
+      "start": 0.181,
+      "end": 0.222,
+      "score": 0.994,
+      "valid": true
+    },
+    {
+      "char": " ",
+      "start": 0.222,
+      "end": 0.302,
+      "score": 0.755,
+      "valid": true
+    },
+    {
+      "char": "s",
+      "start": 0.302,
+      "end": 0.423,
+      "score": 1.0,
+      "valid": true
+    },
+    {
+      "char": "u",
+      "start": 0.423,
+      "end": 0.484,
+      "score": 0.995,
+      "valid": true
+    },
+    {
+      "char": "n",
+      "start": 0.484,
+      "end": 0.584,
+      "score": 0.824,
+      "valid": true
+    },
+    {
+      "char": " ",
+      "start": 0.584,
+      "end": 0.645,
+      "score": 0.423,
+      "valid": true
+    },
+    {
+      "char": "g",
+      "start": 0.645,
+      "end": 0.725,
+      "score": 1.0,
+      "valid": true
+    },
+    {
+      "char": "i",
+      "start": 0.725,
+      "end": 0.766,
+      "score": 1.0,
+      "valid": true
+    },
+    {
+      "char": "v",
+      "start": 0.766,
+      "end": 0.786,
+      "score": 1.0,
+      "valid": true
+    },
+    {
+      "char": "e",
+      "start": 0.786,
+      "end": 0.846,
+      "score": 0.659,
+      "valid": true
+    },
+    {
+      "char": "s",
+      "start": 0.846,
+      "end": 0.907,
+      "score": 0.333,
+      "valid": true
+    },
+    {
+      "char": " ",
+      "start": 0.907,
+      "end": 1.007,
+      "score": 0.793,
+      "valid": true
+    },
+    {
+      "char": "e",
+      "start": 1.007,
+      "end": 1.068,
+      "score": 0.467,
+      "valid": true
+    },
+    {
+      "char": "n",
+      "start": 1.068,
+      "end": 1.128,
+      "score": 0.667,
+      "valid": true
+    },
+    {
+      "char": "e",
+      "start": 1.128,
+      "end": 1.148,
+      "score": 1.0,
+      "valid": true
+    },
+    {
+      "char": "r",
+      "start": 1.148,
+      "end": 1.229,
+      "score": 0.763,
+      "valid": true
+    },
+    {
+      "char": "g",
+      "start": 1.229,
+      "end": 1.35,
+      "score": 0.953,
+      "valid": true
+    },
+    {
+      "char": "y",
+      "start": 1.35,
+      "end": 1.41,
+      "score": 0.903,
+      "valid": true
+    },
+    {
+      "char": " ",
+      "start": 1.41,
+      "end": 1.471,
+      "score": 0.667,
+      "valid": true
+    },
+    {
+      "char": "t",
+      "start": 1.471,
+      "end": 1.551,
+      "score": 0.997,
+      "valid": true
+    },
+    {
+      "char": "o",
+      "start": 1.551,
+      "end": 1.612,
+      "score": 0.664,
+      "valid": true
+    },
+    {
+      "char": " ",
+      "start": 1.612,
+      "end": 1.672,
+      "score": 0.667,
+      "valid": true
+    },
+    {
+      "char": "p",
+      "start": 1.672,
+      "end": 1.733,
+      "score": 0.91,
+      "valid": true
+    },
+    {
+      "char": "l",
+      "start": 1.733,
+      "end": 1.894,
+      "score": 0.995,
+      "valid": true
+    },
+    {
+      "char": "a",
+      "start": 1.894,
+      "end": 1.934,
+      "score": 1.0,
+      "valid": true
+    },
+    {
+      "char": "n",
+      "start": 1.934,
+      "end": 2.035,
+      "score": 0.799,
+      "valid": true
+    },
+    {
+      "char": "t",
+      "start": 2.035,
+      "end": 2.075,
+      "score": 1.0,
+      "valid": true
+    },
+    {
+      "char": "s",
+      "start": 2.075,
+      "end": 2.115,
+      "score": 0.856,
+      "valid": true
+    },
+    {
+      "char": ".",
+      "start": 2.115,
+      "end": 2.135,
+      "score": 1.0,
+      "valid": true
+    }
+  ],
+  "coverage": 1.0,
+  "device": "cuda",
+  "python": "3.13.16 (main, Oct  1 2026, 15:40:24) [GCC 13.3.0]"
+}
