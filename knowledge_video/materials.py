@@ -111,7 +111,9 @@ def fetch_source(url):
             text = text_of(raw)
             if len(text) < 100:
                 raise ValueError("网页未返回足够的正文")
-            title = re.search(r"<title[^>]*>(.*?)</title>", raw, re.I | re.S)
+            title = re.search(
+                r"<title[^>]*>(.*?)</title>", raw, re.IGNORECASE | re.DOTALL
+            )
             return {
                 "url": url,
                 "title": html.unescape(title.group(1)) if title else url,
@@ -198,7 +200,7 @@ def inspect_slides(path):
 
 RESOURCE = re.compile(
     r"(?P<a>\b(?:src|href)\s*=\s*[\"\'])(?P<u>[^\"\']+)(?P<z>[\"\'])|(?P<c>url\(\s*[\"\']?)(?P<v>[^)\"\']+)(?P<d>[\"\']?\s*\))",
-    re.I,
+    re.IGNORECASE,
 )
 ALLOWED = {
     ".css",
@@ -228,7 +230,7 @@ def available_font_sources(raw, parent):
         def declaration(src):
             kept = []
             for choice in re.split(r",(?=\s*(?:url|local)\()", src.group(1)):
-                url = re.search(r"url\(\s*[\"\']?([^\"\')]+)", choice, re.I)
+                url = re.search(r"url\(\s*[\"\']?([^\"\')]+)", choice, re.IGNORECASE)
                 if url:
                     value = url.group(1)
                     parsed = urlparse(value)
@@ -243,13 +245,13 @@ def available_font_sources(raw, parent):
             return "src:" + ",".join(kept) + ";" if kept else ""
 
         result = re.sub(
-            r"\bsrc\s*:\s*([^;]+);", declaration, match.group(0), flags=re.I
+            r"\bsrc\s*:\s*([^;]+);", declaration, match.group(0), flags=re.IGNORECASE
         )
         if not found[0]:
             raise ValueError("课件字体缺少可用文件")
         return result
 
-    return re.sub(r"@font-face\s*\{[^}]+\}", face, raw, flags=re.I)
+    return re.sub(r"@font-face\s*\{[^}]+\}", face, raw, flags=re.IGNORECASE)
 
 
 def bundle_html(source: Path, destination: Path):
@@ -257,7 +259,7 @@ def bundle_html(source: Path, destination: Path):
     source = source.expanduser().resolve()
     assets = destination.parent / "assets"
     assets.mkdir(parents=True, exist_ok=True)
-    seen = {}
+    seen: dict[Path, str] = {}
     budget = [0]
 
     def copy_asset(path):

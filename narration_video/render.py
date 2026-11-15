@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html
+import itertools
 import json
 import os
 import shutil
@@ -56,7 +57,7 @@ def visual_intervals(timeline):
         bounds.update([s["start"], s["end"]])
     times = sorted(t for t in bounds if 0 <= t <= timeline["duration"])
     intervals = []
-    for start, end in zip(times, times[1:]):
+    for start, end in itertools.pairwise(times):
         middle = (start + end) / 2
         frame = 0
         for i, e in enumerate(timeline["events"], 1):

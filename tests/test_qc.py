@@ -1,11 +1,9 @@
 import wave
-from pathlib import Path
 
 from PIL import Image
 
-from narration_video.core import probe
-from narration_video.render import export_video
 from narration_video.qc import run_qc
+from narration_video.render import export_video
 
 
 def make_export(tmp_path, duration=2.37):

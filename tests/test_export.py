@@ -1,5 +1,4 @@
 import wave
-from pathlib import Path
 
 from PIL import Image
 
@@ -41,9 +40,10 @@ def test_ffmpeg_export_preserves_whole_master_audio_and_clock(tmp_path):
 
 
 def test_render_rejects_changed_cue_spec_before_overwriting(tmp_path):
+    import pytest
+
     from narration_video.cli import execute
     from narration_video.core import digest, file_hash, write_json
-    import pytest
 
     script = tmp_path / "script.md"
     script.write_text("## x\n[[a]]你好。")

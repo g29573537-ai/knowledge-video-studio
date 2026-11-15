@@ -10,8 +10,12 @@ from knowledge_video.workflow import Workflow
 @pytest.mark.parametrize(
     "source_case", ["no_candidates", "failed_fetch", "cached_empty"]
 )
-@pytest.mark.parametrize("block_ids", [("b1", "b2"), ("block-1", "block-2"), ("block-1", "block-1")])
-def test_without_sources_reaches_reviewed_lesson(tmp_path, monkeypatch, source_case, block_ids):
+@pytest.mark.parametrize(
+    "block_ids", [("b1", "b2"), ("block-1", "block-2"), ("block-1", "block-1")]
+)
+def test_without_sources_reaches_reviewed_lesson(
+    tmp_path, monkeypatch, source_case, block_ids
+):
     import knowledge_video.workflow as w
 
     browser = tmp_path / "chrome"

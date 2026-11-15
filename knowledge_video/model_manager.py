@@ -7,7 +7,7 @@ import sys
 import threading
 from pathlib import Path
 
-from .languages import LANGUAGES, ASR_MODELS
+from .languages import ASR_MODELS, LANGUAGES
 from .runtime import run_process
 
 
@@ -118,6 +118,6 @@ class ModelManager:
                     if action == "load"
                     else "模型已下载，可点击载入",
                 )
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             with self.lock:
                 self.state.update(status="failed", message=str(exc)[-1200:])

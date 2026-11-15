@@ -17,8 +17,8 @@ from narration_video.voice import OmniVoice
 
 from .jobs import Jobs
 from .materials import bundle_html, inspect_slides
-from .models import JobRequest
 from .model_manager import ModelManager
+from .models import JobRequest
 
 PUBLIC = {
     "build/video.mp4",
@@ -88,7 +88,7 @@ def create_app(data_dir=None):
             result["voice"] = OmniVoice({"base_url": result["voice_url"]}).json(
                 "/model/status"
             )
-        except Exception:
+        except Exception:  # noqa: BLE001
             result["voice"] = {
                 "loaded": False,
                 "detail": "请启动 OmniVoice Studio 服务",
@@ -263,15 +263,21 @@ def create_app(data_dir=None):
     def profiles(url: str = "http://127.0.0.1:3900"):
         try:
             return OmniVoice({"base_url": url}).json("/profiles")
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             raise HTTPException(502, str(e))
 
     @app.get("/artifacts/{id}/{name:path}")
     def artifact(id: str, name: str):
         base = jobs.path(id)
         path = (base / name).resolve()
-        allowed = (name in PUBLIC or name.startswith(("assets/", "build/slides/"))
-                   or re.fullmatch(r"publishing/[0-9a-f]{32}/(?:cover\.png|description\.(?:txt|md)|metadata\.json)", name))
+        allowed = (
+            name in PUBLIC
+            or name.startswith(("assets/", "build/slides/"))
+            or re.fullmatch(
+                r"publishing/[0-9a-f]{32}/(?:cover\.png|description\.(?:txt|md)|metadata\.json)",
+                name,
+            )
+        )
         if not allowed or not path.is_relative_to(base) or not path.is_file():
             raise HTTPException(404)
         return FileResponse(path, headers={"Cache-Control": "no-cache"})

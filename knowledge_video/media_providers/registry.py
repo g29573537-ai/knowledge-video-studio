@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 from pathlib import Path
 from typing import Any
 
@@ -12,17 +11,26 @@ _IMAGE_MODELS: dict[str, set[str]] = {}
 _VIDEO_MODELS: dict[str, set[str]] = {}
 
 
-def register_image_provider(name: str, provider: Any, models: set[str] | None = None) -> None:
+def register_image_provider(
+    name: str, provider: Any, models: set[str] | None = None
+) -> None:
     _IMAGE_PROVIDERS[name] = provider
     _IMAGE_MODELS[name] = set(models or set())
 
 
-def register_video_provider(name: str, provider: Any, models: set[str] | None = None) -> None:
+def register_video_provider(
+    name: str, provider: Any, models: set[str] | None = None
+) -> None:
     _VIDEO_PROVIDERS[name] = provider
     _VIDEO_MODELS[name] = set(models or set())
 
 
-def _resolve(name: str | None, registry: dict[str, Any], models: dict[str, set[str]], requested_model: str | None):
+def _resolve(
+    name: str | None,
+    registry: dict[str, Any],
+    models: dict[str, set[str]],
+    requested_model: str | None,
+):
     if name is None:
         if not registry:
             raise ValueError("no image/video providers registered")
@@ -30,7 +38,9 @@ def _resolve(name: str | None, registry: dict[str, Any], models: dict[str, set[s
     if name not in registry:
         raise ValueError(f"unknown provider: {name}")
     if requested_model and models.get(name) and requested_model not in models[name]:
-        raise ValueError(f"model {requested_model!r} is not allowed for provider {name!r}")
+        raise ValueError(
+            f"model {requested_model!r} is not allowed for provider {name!r}"
+        )
     return name
 
 
@@ -55,7 +65,9 @@ def generate_image(
     if timeout is not None:
         request.timeout = timeout
     if not allow_network and getattr(impl, "requires_network", False):
-        raise RuntimeError(f"provider {provider_name} requires network and allow_network is false")
+        raise RuntimeError(
+            f"provider {provider_name} requires network and allow_network is false"
+        )
     result = impl.generate_image(request)
     if not result.sha256:
         from narration_video.core import file_hash
@@ -77,7 +89,9 @@ def generate_video(
     if timeout is not None:
         request.timeout = timeout
     if not allow_network and getattr(impl, "requires_network", False):
-        raise RuntimeError(f"provider {provider_name} requires network and allow_network is false")
+        raise RuntimeError(
+            f"provider {provider_name} requires network and allow_network is false"
+        )
     result = impl.generate_video(request)
     if not result.sha256:
         from narration_video.core import file_hash

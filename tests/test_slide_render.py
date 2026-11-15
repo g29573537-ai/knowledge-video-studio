@@ -74,23 +74,38 @@ def test_root_overflow_uses_viewport_but_local_body_clipping_remains(
     if not Path(chrome).is_file() or not shutil.which("node"):
         pytest.skip("Chrome and Node are required for slide rendering")
     deck = tmp_path / "slides.html"
-    deck.write_text("""<!doctype html><html><head><style>
-      html{%s}body{margin:0;overflow:hidden;background:#191919;color:white;font:32px Arial;%s}
-      section{position:absolute;left:100px;top:100px;width:700px;height:500px}
-      #outside{position:absolute;top:1050px}
+    deck.write_text(
+        f"""<!doctype html><html><head><style>
+      html{{{root_css}}}body{{margin:0;overflow:hidden;background:#191919;color:white;font:32px Arial;{body_css}}}
+      section{{position:absolute;left:100px;top:100px;width:700px;height:500px}}
+      #outside{{position:absolute;top:1050px}}
     </style></head><body><section id="slide"><p>Visible title inside the viewport</p>
     <p id="outside">Text beyond the viewport</p></section>
-    <script>window.setPresentationState=()=>{};</script></body></html>""" % (root_css, body_css))
+    <script>window.setPresentationState=()=>{{}};</script></body></html>"""
+    )
     report = tmp_path / "report.json"
     cfg = tmp_path / "render.json"
-    cfg.write_text(json.dumps({
-        "deck": str(deck), "output": str(tmp_path / "frames"),
-        "width": 1920, "height": 1080, "chrome": chrome,
-        "states": [{"slide": "slide"}], "layoutReport": str(report),
-    }))
+    cfg.write_text(
+        json.dumps(
+            {
+                "deck": str(deck),
+                "output": str(tmp_path / "frames"),
+                "width": 1920,
+                "height": 1080,
+                "chrome": chrome,
+                "states": [{"slide": "slide"}],
+                "layoutReport": str(report),
+            }
+        )
+    )
     renderer = Path(__file__).resolve().parents[1] / "narration_video/render_deck.mjs"
-    subprocess.run(["node", str(renderer), str(cfg)], check=True,
-                   capture_output=True, text=True, timeout=35)
+    subprocess.run(
+        ["node", str(renderer), str(cfg)],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=35,
+    )
     issues = json.loads(report.read_text())[0]["issues"]
     title_issues = [i for i in issues if i["text"].startswith("Visible title")]
     assert bool(title_issues) == clipped

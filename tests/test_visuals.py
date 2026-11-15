@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from knowledge_video.visuals import generate_scene_visual
 
 

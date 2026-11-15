@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import argparse
-from datetime import datetime
 import json
 import shutil
 import time
+from datetime import datetime
 from pathlib import Path
 
 from .core import (
@@ -47,7 +47,10 @@ def synthesize(cfg):
     blocks = []
     # Stable hashes allow reordered blocks to reuse their speech without using stale text/voices.
     for i, block in enumerate(cfg["blocks"], 1):
-        print(f"[{datetime.now().isoformat(timespec='seconds')}] VOICE {i}/{len(cfg['blocks'])} {block['id']}", flush=True)
+        print(
+            f"[{datetime.now().isoformat(timespec='seconds')}] VOICE {i}/{len(cfg['blocks'])} {block['id']}",
+            flush=True,
+        )
         raw, hit = service.synthesize(block["text"], cache, identity)
         audio = normalized / f"{file_hash(raw)}.wav"
         if not audio.exists():
@@ -194,9 +197,15 @@ def execute(cfg, stage):
             from .render import export_video, render_deck
 
             slides = render_deck(cfg, timeline)
-            print(f"[{datetime.now().isoformat(timespec='seconds')}] EXPORT rendering video to narration clock", flush=True)
+            print(
+                f"[{datetime.now().isoformat(timespec='seconds')}] EXPORT rendering video to narration clock",
+                flush=True,
+            )
             output = export_video(cfg, timeline, slides)
-            print(f"[{datetime.now().isoformat(timespec='seconds')}] VIDEO {output}", flush=True)
+            print(
+                f"[{datetime.now().isoformat(timespec='seconds')}] VIDEO {output}",
+                flush=True,
+            )
         write_json(
             status,
             {

@@ -1,8 +1,8 @@
+import urllib.error
+import urllib.request
 from functools import partial
 from http.server import ThreadingHTTPServer
 from threading import Thread
-import urllib.error
-import urllib.request
 
 import pytest
 

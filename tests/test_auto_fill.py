@@ -29,11 +29,15 @@ def test_secondary_generates_and_hero_does_not(tmp_path):
 def test_rerun_reuses_valid_file_and_hash(tmp_path):
     beats = [make_beat("secondary", "sec2")]
     registry = MediaRightsRegistry()
-    first = auto_fill_secondary_visuals(beats, registry=registry, output_dir=tmp_path)[0]
+    first = auto_fill_secondary_visuals(beats, registry=registry, output_dir=tmp_path)[
+        0
+    ]
     from narration_video.core import file_hash
 
     h1 = file_hash(Path(first.output_path))
-    second = auto_fill_secondary_visuals(beats, registry=registry, output_dir=tmp_path)[0]
+    second = auto_fill_secondary_visuals(beats, registry=registry, output_dir=tmp_path)[
+        0
+    ]
     h2 = file_hash(Path(second.output_path))
     assert h1 == h2
     assert second.cache_key == first.cache_key
@@ -46,7 +50,9 @@ def test_failed_qc_is_not_masked(tmp_path):
 
     def failing(*args, **kwargs):
         # Simulate AI failure with fallback.
-        kwargs["generate_diffusion"] = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("bad"))
+        kwargs["generate_diffusion"] = lambda *a, **k: (_ for _ in ()).throw(
+            RuntimeError("bad")
+        )
         kwargs["visual_mode"] = "local_diffusion"
         kwargs["ai_fallback_enabled"] = True
         kwargs["scene_role"] = "secondary"
@@ -61,7 +67,9 @@ def test_failed_qc_is_not_masked(tmp_path):
     try:
         beats = [make_beat("secondary", "sec3")]
         registry = MediaRightsRegistry()
-        res = auto_fill_secondary_visuals(beats, registry=registry, output_dir=tmp_path)[0]
+        res = auto_fill_secondary_visuals(
+            beats, registry=registry, output_dir=tmp_path
+        )[0]
         assert res.fallback_used is True
         assert registry.export_allowed() is False
     finally:

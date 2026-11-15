@@ -25,7 +25,9 @@ def fingerprint_inputs(inputs: Any) -> str:
             return str(value)
         if hasattr(value, "model_dump"):
             return value.model_dump()
-        raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
+        raise TypeError(
+            f"Object of type {type(value).__name__} is not JSON serializable"
+        )
 
     canonical = json.dumps(
         inputs,
@@ -70,7 +72,9 @@ class RunStore:
         manifest = {
             "run_id": run_id or uuid.uuid4().hex,
             "status": "running",
-            "input_fingerprint": fingerprint_inputs(inputs if inputs is not None else {}),
+            "input_fingerprint": fingerprint_inputs(
+                inputs if inputs is not None else {}
+            ),
             "created_at": time.time(),
             "started_at": time.time(),
             "heartbeat_at": time.time(),
@@ -169,7 +173,10 @@ class RunStore:
 
                 if file_hash(path) != info["sha256"]:
                     return False
-            if info.get("size_bytes") is not None and path.stat().st_size != info["size_bytes"]:
+            if (
+                info.get("size_bytes") is not None
+                and path.stat().st_size != info["size_bytes"]
+            ):
                 return False
         return True
 

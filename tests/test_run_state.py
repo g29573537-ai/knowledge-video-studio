@@ -1,5 +1,4 @@
 import threading
-from pathlib import Path
 
 import pytest
 from pydantic import BaseModel
@@ -24,7 +23,8 @@ def test_run_store_resume_marks_stale_run_interrupted(tmp_path):
     store = RunStore(tmp_path, ttl_seconds=0)
     store.start({"x": 1})
     # Force stale heartbeat.
-    import json, time
+    import json
+    import time
 
     data = json.loads((tmp_path / "run_state.json").read_text())
     data["heartbeat_at"] = time.time() - 10
@@ -38,6 +38,7 @@ def test_run_store_artifact_integrity_detects_tampering(tmp_path):
     p.write_text("hello")
     store = RunStore(tmp_path)
     info = store.record_artifact("a", p)
+    assert info
     assert store.stage_completed("missing") is False
     store.record_stage("stage1", artifacts={"a": p})
     assert store.stage_completed("stage1") is True
@@ -49,7 +50,9 @@ def test_workflow_llm_reuses_only_matching_fingerprint(tmp_path, monkeypatch):
     request = JobRequest(topic="test topic", provider=ProviderConfig(kind="codex"))
     cancel = threading.Event()
     wf = Workflow(tmp_path, request, lambda *a, **k: None, cancel)
-    wf.provider.generate = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("should not run"))
+    wf.provider.generate = lambda *a, **k: (_ for _ in ()).throw(
+        RuntimeError("should not run")
+    )
 
     target = tmp_path / "cached.json"
     target.write_text('{"value": 5}')
@@ -64,7 +67,7 @@ def test_workflow_llm_reuses_only_matching_fingerprint(tmp_path, monkeypatch):
             "images": None,
         }
     )
-    (tmp_path / "cached.fingerprint.json").write_text('{"fingerprint": "%s"}' % fp)
+    (tmp_path / "cached.fingerprint.json").write_text('{"fingerprint": "%s"}' % fp)  # noqa: UP031
 
     result = wf.llm("cached", "inst", {"x": 1}, M)
     assert result.value == 5

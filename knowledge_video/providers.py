@@ -39,7 +39,7 @@ def codex_binary():
                     path,
                 )
             )
-        except Exception:
+        except Exception:  # noqa: BLE001, S110
             pass
     return max(found)[1] if found else shutil.which("codex")
 

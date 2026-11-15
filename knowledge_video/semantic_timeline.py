@@ -7,10 +7,8 @@ with every phrase anchored to real character timings from forced alignment.
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
-from typing import Any, Iterable, Optional
-
-from .models import Block
+from dataclasses import dataclass, field
+from typing import Any
 
 SCHEMA = "semantic_timeline"
 SEMANTIC_VERSION = 1
@@ -55,7 +53,7 @@ def _original_slice(text: str, start_norm: int, end_norm: int) -> str:
 def resolve_anchor(
     phrase: str,
     text: str,
-    chars: Optional[list[dict]] = None,
+    chars: list[dict] | None = None,
     offset: float = 0.0,
 ) -> dict[str, Any]:
     """Resolve a spoken phrase to normalized character and acoustic time anchors."""
@@ -85,16 +83,20 @@ def resolve_anchor(
         if not bool(chars[start].get("valid", False)) or not bool(
             chars[end].get("valid", False)
         ):
-            raise ValueError(f"Semantic anchor lacks reliable acoustic timing: {phrase!r}")
+            raise ValueError(
+                f"Semantic anchor lacks reliable acoustic timing: {phrase!r}"
+            )
         result["time_start"] = offset + float(chars[start].get("start", 0.0))
-        result["time_end"] = offset + float(chars[end].get("end", chars[end].get("start", 0.0)))
+        result["time_end"] = offset + float(
+            chars[end].get("end", chars[end].get("start", 0.0))
+        )
     return result
 
 
 @dataclass
 class MediaSource:
     type: str = "unknown"
-    asset_ref: Optional[str] = None
+    asset_ref: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {"type": self.type, "asset_ref": self.asset_ref}
@@ -103,7 +105,7 @@ class MediaSource:
 @dataclass
 class CameraPlan:
     view: str = "overview"
-    kind: Optional[str] = None
+    kind: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         result = {"view": self.view}
@@ -114,8 +116,8 @@ class CameraPlan:
 
 @dataclass
 class ActionWindow:
-    start: Optional[float] = None
-    end: Optional[float] = None
+    start: float | None = None
+    end: float | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {"start": self.start, "end": self.end}
@@ -124,21 +126,21 @@ class ActionWindow:
 @dataclass
 class SemanticBeat:
     id: str
-    cue_id: Optional[str] = None
+    cue_id: str | None = None
     phrase: str = ""
     anchor_text: str = ""
-    visual_object: Optional[str] = None
-    fact_claim_id: Optional[str] = None
+    visual_object: str | None = None
+    fact_claim_id: str | None = None
     media_source: MediaSource = field(default_factory=MediaSource)
-    asset_ref: Optional[str] = None
+    asset_ref: str | None = None
     camera_plan: list[CameraPlan] = field(default_factory=lambda: [CameraPlan()])
     action_window: ActionWindow = field(default_factory=ActionWindow)
     word_start: int = 0
     word_end: int = 0
     char_start: int = 0
     char_end: int = 0
-    time_start: Optional[float] = None
-    time_end: Optional[float] = None
+    time_start: float | None = None
+    time_end: float | None = None
     semantic_version: int = SEMANTIC_VERSION
     visual_role: str = "hero"
 
@@ -168,11 +170,11 @@ class SemanticBeat:
 @dataclass
 class SemanticEvent:
     id: str
-    beat_id: Optional[str] = None
-    time: Optional[float] = None
-    spoken_time: Optional[float] = None
-    score: Optional[float] = None
-    state: Optional[dict[str, Any]] = None
+    beat_id: str | None = None
+    time: float | None = None
+    spoken_time: float | None = None
+    score: float | None = None
+    state: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -188,9 +190,9 @@ class SemanticEvent:
 @dataclass
 class SemanticScene:
     id: str
-    block_id: Optional[str] = None
-    slide_id: Optional[str] = None
-    headline: Optional[str] = None
+    block_id: str | None = None
+    slide_id: str | None = None
+    headline: str | None = None
     narration: str = ""
     visual_role: str = "hero"
     beats: list[SemanticBeat] = field(default_factory=list)
@@ -251,11 +253,13 @@ def _merge_blocks(blocks: Any, aligned_blocks: Any = None) -> list[dict[str, Any
 
 def _cue_list(block: dict[str, Any]) -> list[dict[str, Any]]:
     cues = _get(block, "cues", []) or []
-    return sorted([_as_dict(c) for c in cues], key=lambda c: int(c.get("char_index", 0)))
+    return sorted(
+        [_as_dict(c) for c in cues], key=lambda c: int(c.get("char_index", 0))
+    )
 
 
 def _event_time_map(timeline: Any) -> dict[str, float]:
-    result = {}
+    result: dict[str, Any] = {}
     if not timeline:
         return result
     data = _as_dict(timeline)
@@ -277,7 +281,9 @@ def build_semantic_timeline(
     if blocks is None:
         blocks = kwargs.get("blocks")
     if aligned_blocks is None:
-        aligned_blocks = kwargs.get("aligned_blocks") or kwargs.get("aligned") or alignments
+        aligned_blocks = (
+            kwargs.get("aligned_blocks") or kwargs.get("aligned") or alignments
+        )
     merged_blocks = _merge_blocks(blocks, aligned_blocks)
     if not merged_blocks and aligned_blocks is not None:
         merged_blocks = [_as_dict(b) for b in aligned_blocks]
@@ -301,7 +307,10 @@ def build_semantic_timeline(
             cue_id = _get(cue, "id")
             start_char = int(_get(cue, "char_index", 0) or 0)
             if index + 1 < len(cues_or_none):
-                end_char = int(_get(cues_or_none[index + 1], "char_index", start_char + 1) or start_char + 1)
+                end_char = int(
+                    _get(cues_or_none[index + 1], "char_index", start_char + 1)
+                    or start_char + 1
+                )
             else:
                 end_char = normalized_length
             if end_char <= start_char:
@@ -314,7 +323,10 @@ def build_semantic_timeline(
                 time_start = event_times[str(cue_id)]
             else:
                 time_start = anchor["time_start"]
-            if index + 1 < len(cues_or_none) and str(_get(cues_or_none[index + 1], "id")) in event_times:
+            if (
+                index + 1 < len(cues_or_none)
+                and str(_get(cues_or_none[index + 1], "id")) in event_times
+            ):
                 time_end = event_times[str(_get(cues_or_none[index + 1], "id"))]
             elif duration is not None:
                 time_end = offset + float(duration)
@@ -322,14 +334,31 @@ def build_semantic_timeline(
                 time_end = anchor["time_end"]
             media_source_raw = _get(block, "media_source", None)
             if isinstance(media_source_raw, str):
-                media_source_raw = {"type": media_source_raw, "asset_ref": _get(block, "asset_ref")}
+                media_source_raw = {
+                    "type": media_source_raw,
+                    "asset_ref": _get(block, "asset_ref"),
+                }
             media_source = MediaSource(
-                type=str(_get(media_source_raw, "type", _get(block, "media_source_type", _get(block, "media", "unknown")))),
+                type=str(
+                    _get(
+                        media_source_raw,
+                        "type",
+                        _get(
+                            block, "media_source_type", _get(block, "media", "unknown")
+                        ),
+                    )
+                ),
                 asset_ref=_get(media_source_raw, "asset_ref", _get(block, "asset_ref")),
             )
             camera_raw = _get(block, "camera_plan", None)
             if camera_raw is None:
-                camera_raw = [{"view": _get(block, "camera_view", _get(block, "camera", "overview"))}]
+                camera_raw = [
+                    {
+                        "view": _get(
+                            block, "camera_view", _get(block, "camera", "overview")
+                        )
+                    }
+                ]
             camera_plan = [
                 CameraPlan(
                     view=str(_get(c, "view", _get(c, "kind", "overview"))),
@@ -341,12 +370,16 @@ def build_semantic_timeline(
             # camera field and do not overwrite it with source kind.
             if all(c.kind is not None and c.view == "overview" for c in camera_plan):
                 pass
-            visual_object = _get(block, "visual_object", _get(block, "visual", _get(block, "headline", _get(block, "slide_id"))))
+            visual_object = _get(
+                block,
+                "visual_object",
+                _get(block, "visual", _get(block, "headline", _get(block, "slide_id"))),
+            )
             fact_claim_id = _get(block, "fact_claim_id", None)
             if fact_claim_id is None:
                 source_ids = _get(block, "source_ids", []) or []
                 fact_claim_id = source_ids[0] if source_ids else block_id
-            action_window = _get(block, "action_window", None)
+            action_window: Any = _get(block, "action_window", None)
             if action_window is None:
                 action_window = {"start": time_start, "end": time_end}
             else:
@@ -363,7 +396,9 @@ def build_semantic_timeline(
                 media_source=media_source,
                 asset_ref=media_source.asset_ref,
                 camera_plan=camera_plan,
-                action_window=ActionWindow(start=action_window.get("start"), end=action_window.get("end")),
+                action_window=ActionWindow(
+                    start=action_window.get("start"), end=action_window.get("end")
+                ),
                 word_start=anchor["word_start"],
                 word_end=anchor["word_end"],
                 char_start=anchor["char_start"],
@@ -380,8 +415,12 @@ def build_semantic_timeline(
                         id=str(cue_id),
                         beat_id=beat.id,
                         time=time_start,
-                        spoken_time=anchor["time_start"] if anchor["time_start"] is not None else time_start,
-                        score=_get(next((c for c in chars or [] if False), {}), "score", None),
+                        spoken_time=anchor["time_start"]
+                        if anchor["time_start"] is not None
+                        else time_start,
+                        score=_get(
+                            next((c for c in chars or [] if False), {}), "score", None
+                        ),
                         state={"slide": _get(block, "slide_id")},
                     )
                 )
@@ -391,9 +430,9 @@ def build_semantic_timeline(
         # Attach cue scores where possible.
         cue_by_id = {str(_get(c, "id")): c for c in cues}
         for event in events:
-            cue = cue_by_id.get(event.id)
-            if cue is not None and chars is not None:
-                ci = int(cue.get("char_index", 0) or 0)
+            cue_item: Any = cue_by_id.get(event.id)
+            if cue_item is not None and chars is not None:
+                ci = int(cue_item.get("char_index", 0) or 0)
                 if 0 <= ci < len(chars):
                     event.score = chars[ci].get("score")
         scene = SemanticScene(

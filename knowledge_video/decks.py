@@ -73,7 +73,7 @@ def validate_generated_html(raw, lesson):
     if not raw.strip().lower().startswith(("<!doctype", "<html")):
         raise ValueError("模型未生成完整 HTML")
     if any(
-        re.search(pattern, raw, re.I)
+        re.search(pattern, raw, re.IGNORECASE)
         for pattern in [
             r"<iframe",
             r"<form",

@@ -4,7 +4,6 @@ import concurrent.futures
 import hashlib
 import json
 import os
-import re
 import shutil
 import sys
 from datetime import datetime
@@ -24,6 +23,8 @@ from .decks import (
 )
 from .languages import language_instruction
 from .materials import bundle_html, fetch_source, inspect_slides
+from .media_providers import get_image_provider
+from .media_rights import MediaRightsRegistry
 from .models import (
     DeckOutput,
     Lesson,
@@ -33,10 +34,8 @@ from .models import (
     VisualReview,
 )
 from .providers import Provider
-from .runtime import Cancelled, atomic_json, run_process
-from .media_providers import get_image_provider
-from .media_rights import MediaRightsRegistry
 from .run_state import RunStore, fingerprint_inputs
+from .runtime import Cancelled, atomic_json, run_process
 from .semantic_timeline import build_semantic_timeline
 from .visuals import auto_fill_secondary_visuals
 
@@ -68,7 +67,7 @@ class Workflow:
             {
                 "instruction": instruction,
                 "payload": payload,
-                "schema": getattr(model, "model_json_schema", lambda: {})(),
+                "schema": getattr(model, "model_json_schema", dict)(),
                 "model": getattr(self.request.provider, "model", ""),
                 "provider_kind": getattr(self.request.provider, "kind", ""),
                 "temperature": getattr(self.request.provider, "temperature", None),
@@ -83,9 +82,11 @@ class Workflow:
             if saved.get("fingerprint") == current_fingerprint:
                 try:
                     return model.model_validate_json(target.read_text(encoding="utf-8"))
-                except Exception:
+                except Exception:  # noqa: BLE001, S110
                     pass
-        self.notify(f"[{datetime.now().isoformat(timespec='seconds')}] 模型正在处理 " + name)
+        self.notify(
+            f"[{datetime.now().isoformat(timespec='seconds')}] 模型正在处理 " + name
+        )
         error = None
         for attempt in range(self.request.max_repairs + 1):
             try:
@@ -140,7 +141,7 @@ class Workflow:
                         sources.append(
                             {"id": f"S{len(sources) + 1}", **future.result()}
                         )
-                    except Exception as exc:
+                    except Exception as exc:  # noqa: BLE001
                         errors.append({"url": url, "error": str(exc)[:300]})
             if r.source_notes:
                 sources.append(
@@ -198,7 +199,9 @@ class Workflow:
         lesson, id_changes = normalize_lesson_ids(review.lesson)
         atomic_json(p / "id_normalization.json", {"changes": id_changes})
         if id_changes:
-            self.notify(f"已自动规范 {len(id_changes)} 个段落编号，保留原始讲稿和页面对应关系")
+            self.notify(
+                f"已自动规范 {len(id_changes)} 个段落编号，保留原始讲稿和页面对应关系"
+            )
         if not sources:
             notice = "本课依据模型通用知识编写，未使用外部核验资料。"
             if notice not in lesson.uncertainties:
@@ -438,7 +441,9 @@ class Workflow:
         self.step("voice", "准备参考声音")
         if r.voice_backend == "kokoro":
             service = None
-            cfg["voice"]["profile_id"] = cfg["voice"].get("profile_id", "kokoro-af_heart")
+            cfg["voice"]["profile_id"] = cfg["voice"].get(
+                "profile_id", "kokoro-af_heart"
+            )
             atomic_json(p / "project.json", cfg)
         else:
             service = OmniVoice(cfg["voice"])
@@ -618,14 +623,19 @@ class Workflow:
         (p / "description.md").write_text(desc, encoding="utf-8")
         try:
             publication = self.make_publication()
-            self.notify("封面与简介已生成", publication=publication,
-                        publishing={"status": "completed", "message": "封面与简介已生成"})
+            self.notify(
+                "封面与简介已生成",
+                publication=publication,
+                publishing={"status": "completed", "message": "封面与简介已生成"},
+            )
         except Cancelled:
             raise
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             # A publishing-asset failure must not discard an already checked video.
-            self.notify("视频已完成，封面与简介可单独重试", publishing={
-                "status": "failed", "message": str(exc)[-1000:]})
+            self.notify(
+                "视频已完成，封面与简介可单独重试",
+                publishing={"status": "failed", "message": str(exc)[-1000:]},
+            )
         return {
             "title": lesson.title,
             "duration": report["duration"],

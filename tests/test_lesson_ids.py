@@ -11,16 +11,23 @@ def make_lesson(ids):
         description="验证编号兼容性。",
         uncertainties=[],
         blocks=[
-            Block(id=value, slide_id=f"slide-{i}", headline="讲解",
-                  narration="这里是一段完整的教学口播，用于验证页面与声音的对应关系。",
-                  points=["保留内容"], source_ids=["U1"])
+            Block(
+                id=value,
+                slide_id=f"slide-{i}",
+                headline="讲解",
+                narration="这里是一段完整的教学口播，用于验证页面与声音的对应关系。",
+                points=["保留内容"],
+                source_ids=["U1"],
+            )
             for i, value in enumerate(ids, 1)
         ],
     )
 
 
 def test_normalization_reserves_valid_ids_and_preserves_content():
-    lesson = make_lesson(["block-1", "block_1", "block_1", "BLOCK 1", "", "中文", "9", "a" * 80])
+    lesson = make_lesson(
+        ["block-1", "block_1", "block_1", "BLOCK 1", "", "中文", "9", "a" * 80]
+    )
     raw = lesson.model_dump()
     fixed, changes = normalize_lesson_ids(lesson)
     validate_lesson(fixed)

@@ -11,7 +11,6 @@ status as success.  Polling exits as soon as Kaggle reports a terminal status.
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 import re
@@ -21,7 +20,6 @@ from pathlib import Path
 from typing import Any
 
 from narration_video.core import digest, file_hash, read_json, write_json
-
 
 TERMINAL_FAILURES = {"error", "failed", "cancelled", "timeout"}
 
@@ -78,7 +76,9 @@ class KaggleVoice:
         while True:
             elapsed = time.monotonic() - start
             if elapsed >= self.total_timeout:
-                raise RuntimeError("Kaggle voice kernel did not finish before total timeout")
+                raise RuntimeError(
+                    "Kaggle voice kernel did not finish before total timeout"
+                )
             try:
                 result = self._run(
                     [self.kaggle_cmd, "kernels", "status", kernel_slug],
@@ -92,10 +92,14 @@ class KaggleVoice:
             if status == "complete":
                 return
             if status in TERMINAL_FAILURES:
-                raise RuntimeError(f"Kaggle voice kernel reached terminal status: {status}")
+                raise RuntimeError(
+                    f"Kaggle voice kernel reached terminal status: {status}"
+                )
             remaining = self.total_timeout - (time.monotonic() - start)
             if remaining <= 0:
-                raise RuntimeError("Kaggle voice kernel did not finish before total timeout")
+                raise RuntimeError(
+                    "Kaggle voice kernel did not finish before total timeout"
+                )
             time.sleep(min(self.poll_backoff, remaining))
 
     def _fetch_output(self, kernel_slug: str, dest: Path) -> list[Path]:
@@ -109,7 +113,9 @@ class KaggleVoice:
             raise RuntimeError("Kaggle voice kernel returned no output files")
         return files
 
-    def synthesize(self, text: str, cache: Path, identity: dict[str, Any]) -> tuple[Path, bool]:
+    def synthesize(
+        self, text: str, cache: Path, identity: dict[str, Any]
+    ) -> tuple[Path, bool]:
         cache = Path(cache)
         cache.mkdir(parents=True, exist_ok=True)
         fingerprint = digest(
@@ -175,7 +181,9 @@ class KaggleVoice:
         self._poll(self.kernel_slug)
         output_dir = cache / f"kaggle_output_{fingerprint}"
         files = self._fetch_output(self.kernel_slug, output_dir)
-        wav_candidates = [p for p in files if p.suffix.lower() in {".wav", ".mp3", ".flac"}]
+        wav_candidates = [
+            p for p in files if p.suffix.lower() in {".wav", ".mp3", ".flac"}
+        ]
         if not wav_candidates:
             raise RuntimeError("Kaggle voice kernel returned no audio file")
         source = wav_candidates[0]
@@ -183,7 +191,16 @@ class KaggleVoice:
             # Keep the rest of the pipeline on WAV input.
             tmp = audio.with_suffix(".partial.wav")
             self._run(
-                ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(source), str(tmp)],
+                [
+                    "ffmpeg",
+                    "-hide_banner",
+                    "-loglevel",
+                    "error",
+                    "-y",
+                    "-i",
+                    str(source),
+                    str(tmp),
+                ],
                 300,
             )
             tmp.replace(audio)

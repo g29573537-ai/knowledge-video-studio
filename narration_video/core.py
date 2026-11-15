@@ -61,11 +61,11 @@ def normalized(text: str) -> str:
 
 def parse_script(text: str) -> list[dict]:
     """## block-id defines a natural paragraph; [[cue-id]] anchors its next word."""
-    blocks = []
+    blocks: list[dict] = []
     block_id = None
-    lines = []
+    lines: list[str] = []
     ids = set()
-    cue_ids = set()
+    cue_ids: set[str] = set()
 
     def finish():
         if block_id is None:

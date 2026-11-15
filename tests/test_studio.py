@@ -1,11 +1,14 @@
-import json, threading, time
+import json
+import threading
 from pathlib import Path
+
 import pytest
 from fastapi.testclient import TestClient
-from knowledge_video.server import create_app
-from knowledge_video.models import JobRequest, ProviderConfig, ResearchPlan
-from knowledge_video.providers import Provider
+
 from knowledge_video.materials import bundle_html, inspect_slides
+from knowledge_video.models import ProviderConfig, ResearchPlan
+from knowledge_video.providers import Provider
+from knowledge_video.server import create_app
 
 HEADERS = {"X-Studio-Client": "1"}
 
@@ -284,7 +287,8 @@ def test_codex_provider_passes_prompt_via_stdin_and_never_uses_shell(
 
 def test_cancel_terminates_owned_child_process(tmp_path):
     import sys
-    from knowledge_video.runtime import run_process, Cancelled
+
+    from knowledge_video.runtime import Cancelled, run_process
 
     cancel = threading.Event()
     timer = threading.Timer(0.3, cancel.set)

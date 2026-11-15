@@ -1,8 +1,8 @@
 """Heavy audio work runs in a child process, isolated from the web server."""
 
 import argparse
-from datetime import datetime
 import shutil
+from datetime import datetime
 from pathlib import Path
 
 from narration_video.alignment import align_blocks
@@ -158,7 +158,10 @@ def main():
         for block, error in failures:
             attempt = attempts.get(block["id"], 0) + 1
             attempts[block["id"]] = attempt
-            print(f"[{datetime.now().isoformat(timespec='seconds')}] REPAIR {block['id']} {attempt}/{args.repairs}: {error}", flush=True)
+            print(
+                f"[{datetime.now().isoformat(timespec='seconds')}] REPAIR {block['id']} {attempt}/{args.repairs}: {error}",
+                flush=True,
+            )
             if attempt > args.repairs:
                 raise RuntimeError(
                     f"段落 {block['id']} 在 {args.repairs} 次重做后仍未通过：{error}"

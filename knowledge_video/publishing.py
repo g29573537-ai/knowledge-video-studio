@@ -1,4 +1,5 @@
 """Local publishing assets, independent of voice/video generation."""
+
 import base64
 import html
 import json
@@ -23,11 +24,23 @@ INSTRUCTION = """为已经完成的知识视频制作封面文案和发布简介
 
 
 def description_text(copy, chapters, sources, uncertainties):
-    lines = [copy.title, "", copy.introduction, "", " ".join("#" + t.lstrip("#").strip() for t in copy.tags), ""]
-    lines += [f"{int(c['time']) // 60:02d}:{int(c['time']) % 60:02d} {c['title']}" for c in chapters]
+    lines = [
+        copy.title,
+        "",
+        copy.introduction,
+        "",
+        " ".join("#" + t.lstrip("#").strip() for t in copy.tags),
+        "",
+    ]
+    lines += [
+        f"{int(c['time']) // 60:02d}:{int(c['time']) % 60:02d} {c['title']}"
+        for c in chapters
+    ]
     if sources:
         lines += ["", "References / 参考资料"]
-        lines += [s["title"] + (" " + s["url"] if s.get("url") else "") for s in sources]
+        lines += [
+            s["title"] + (" " + s["url"] if s.get("url") else "") for s in sources
+        ]
     if uncertainties:
         lines += ["", *uncertainties]
     return "\n".join(lines).strip() + "\n"
@@ -37,16 +50,18 @@ def cover_html(copy, screenshot, template):
     # Reuse the actual deck preview. Text is escaped and laid out locally;
     # neither provider HTML nor remote images are needed for a cover.
     preview = base64.b64encode(screenshot.read_bytes()).decode()
+
     def color(pattern, fallback):
-        match = re.search(pattern, template, re.I)
+        match = re.search(pattern, template, re.IGNORECASE)
         return match.group(1) if match else fallback
+
     background = color(r"background(?:-color)?\s*:\s*(#[0-9a-f]{6})\b", "#191919")
     accent = color(r"--(?:accent|r-link-color)\s*:\s*(#[0-9a-f]{6})\b", "#5e9eff")
-    rgb = [int(background[i:i + 2], 16) for i in (1, 3, 5)]
+    rgb = [int(background[i : i + 2], 16) for i in (1, 3, 5)]
     light = sum(c * w for c, w in zip(rgb, (0.2126, 0.7152, 0.0722))) > 150
     foreground, secondary = ("#111827", "#475569") if light else ("#ffffff", "#cbd5e1")
     brand = "Zero2Quant" if "Zero2Quant" in template else "Knowledge Video Studio"
-    return f'''<!doctype html><html><head><meta charset="utf-8"><style>
+    return f"""<!doctype html><html><head><meta charset="utf-8"><style>
     *{{box-sizing:border-box}}html,body{{margin:0;width:1920px;height:1080px;overflow:hidden}}
     body{{background:{background};color:{foreground};font-family:Arial,"PingFang SC","Noto Sans CJK SC",sans-serif}}
     section{{height:1080px;padding:80px 88px;display:flex;flex-direction:column}}
@@ -60,7 +75,7 @@ def cover_html(copy, screenshot, template):
     <div class="content"><div id="copy"><div class="line"></div><h1>{html.escape(copy.cover_title)}</h1><p>{html.escape(copy.cover_subtitle)}</p></div>
     <img alt="" src="data:image/png;base64,{preview}"></div></section>
     <script>window.setPresentationState=()=>{{const h=document.querySelector('h1'),p=document.querySelector('p');
-    while(document.querySelector('#copy').getBoundingClientRect().height>760&&parseFloat(getComputedStyle(h).fontSize)>56){{h.style.fontSize=(parseFloat(getComputedStyle(h).fontSize)-2)+'px';p.style.fontSize=(parseFloat(getComputedStyle(p).fontSize)-.3)+'px';}}}};</script></body></html>'''
+    while(document.querySelector('#copy').getBoundingClientRect().height>760&&parseFloat(getComputedStyle(h).fontSize)>56){{h.style.fontSize=(parseFloat(getComputedStyle(h).fontSize)-2)+'px';p.style.fontSize=(parseFloat(getComputedStyle(p).fontSize)-.3)+'px';}}}};</script></body></html>"""
 
 
 def generate(workflow):
@@ -71,8 +86,12 @@ def generate(workflow):
     version = uuid.uuid4().hex
     folder = root / "publishing" / version
     folder.mkdir(parents=True)
-    copy = workflow.llm(f"publishing/{version}/copy", INSTRUCTION,
-                        {"lesson": lesson, "topic": workflow.request.topic}, PublishingCopy)
+    copy = workflow.llm(
+        f"publishing/{version}/copy",
+        INSTRUCTION,
+        {"lesson": lesson, "topic": workflow.request.topic},
+        PublishingCopy,
+    )
     text = description_text(copy, chapters, sources, lesson.get("uncertainties", []))
     (folder / "description.txt").write_text(text, encoding="utf-8")
     (folder / "description.md").write_text(text, encoding="utf-8")
@@ -82,22 +101,47 @@ def generate(workflow):
     template = root / "template.html"
     if not template.exists():
         template = root / "slides.html"
-    (folder / "cover.html").write_text(cover_html(copy, shots[0], template.read_text()), encoding="utf-8")
+    (folder / "cover.html").write_text(
+        cover_html(copy, shots[0], template.read_text()), encoding="utf-8"
+    )
     from .workflow import chrome_path
+
     config = folder / "render.json"
-    atomic_json(config, {"deck": str(folder / "cover.html"), "output": str(folder / "frames"),
-                        "width": 1920, "height": 1080, "chrome": workflow.request.chrome or chrome_path(),
-                        "states": [{"slide": "cover"}], "layoutReport": str(folder / "layout.json")})
+    atomic_json(
+        config,
+        {
+            "deck": str(folder / "cover.html"),
+            "output": str(folder / "frames"),
+            "width": 1920,
+            "height": 1080,
+            "chrome": workflow.request.chrome or chrome_path(),
+            "states": [{"slide": "cover"}],
+            "layoutReport": str(folder / "layout.json"),
+        },
+    )
     workflow.notify("正在排版并渲染视频封面")
-    run_process(["node", Path(__file__).parent.parent / "narration_video/render_deck.mjs", config],
-                root, workflow.cancel, 180, log=workflow.notify)
+    run_process(
+        [
+            "node",
+            Path(__file__).parent.parent / "narration_video/render_deck.mjs",
+            config,
+        ],
+        root,
+        workflow.cancel,
+        180,
+        log=workflow.notify,
+    )
     layout = json.loads((folder / "layout.json").read_text())
     if any(page["issues"] for page in layout):
         raise ValueError("封面文字超出可见范围，请重新生成较短的封面文案")
     (folder / "frames/0000.png").replace(folder / "cover.png")
-    result = {**copy.model_dump(), "description": text, "version": version,
-              "cover_path": f"publishing/{version}/cover.png",
-              "description_path": f"publishing/{version}/description.txt"}
+    result = {
+        **copy.model_dump(),
+        "description": text,
+        "version": version,
+        "cover_path": f"publishing/{version}/cover.png",
+        "description_path": f"publishing/{version}/description.txt",
+    }
     atomic_json(folder / "metadata.json", result)
     # Publish a new version only after all assets and layout checks succeed.
     atomic_json(root / "publishing.json", result)

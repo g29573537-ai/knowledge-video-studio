@@ -20,7 +20,9 @@ class ProviderConfig(BaseModel):
 class VisualConfig(BaseModel):
     visual_mode: Literal["procedural", "local_diffusion", "remote_api"] = "procedural"
     ai_fallback_enabled: bool = False
-    allowed_roles: list[str] = Field(default_factory=lambda: ["secondary", "bridge", "background"])
+    allowed_roles: list[str] = Field(
+        default_factory=lambda: ["secondary", "bridge", "background"]
+    )
     diffusion_available_override: bool | None = None
     remote_provider: str = ""
     remote_model: str = ""

@@ -7,13 +7,13 @@ import pytest
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
-from knowledge_video.models import JobRequest, ResearchPlan
-from knowledge_video.workflow import Workflow
-from knowledge_video.server import create_app
 from knowledge_video.model_manager import ModelManager
-from narration_video.voice import OmniVoice
-from narration_video.timeline import subtitle_spans
+from knowledge_video.models import JobRequest, ResearchPlan
+from knowledge_video.server import create_app
+from knowledge_video.workflow import Workflow
 from narration_video.core import normalized
+from narration_video.timeline import subtitle_spans
+from narration_video.voice import OmniVoice
 
 
 def test_language_is_validated_and_reaches_provider(tmp_path, monkeypatch):

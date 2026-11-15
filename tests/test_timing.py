@@ -1,11 +1,9 @@
-import copy
-
 import pytest
 
 from narration_video.alignment import extract_chars
 from narration_video.core import parse_script
-from narration_video.timeline import compile_timeline, subtitle_spans, to_srt
 from narration_video.render import visual_intervals
+from narration_video.timeline import compile_timeline, subtitle_spans, to_srt
 
 
 def test_markers_never_split_natural_narration():

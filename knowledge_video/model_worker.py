@@ -5,9 +5,10 @@ import gc
 import os
 from pathlib import Path
 
+from narration_video.voice import OmniVoice
+
 from .languages import ASR_MODELS, LANGUAGES
 from .runtime import atomic_json
-from narration_video.voice import OmniVoice
 
 
 def main():
@@ -19,15 +20,15 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     os.environ["DISABLE_SAFETENSORS_CONVERSION"] = "1"
-    from huggingface_hub import snapshot_download
-    from faster_whisper import WhisperModel
-    from whisperx.alignment import (
-        load_align_model,
-        DEFAULT_ALIGN_MODELS_HF,
-        DEFAULT_ALIGN_MODELS_TORCH,
-    )
     import torch
     import torchaudio
+    from faster_whisper import WhisperModel
+    from huggingface_hub import snapshot_download
+    from whisperx.alignment import (
+        DEFAULT_ALIGN_MODELS_HF,
+        DEFAULT_ALIGN_MODELS_TORCH,
+        load_align_model,
+    )
 
     paths = []
     print("STEP 1/4 下载或复用 OmniVoice 多语言克隆权重", flush=True)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import itertools
 import re
 
 from .core import normalized
@@ -134,10 +135,10 @@ def compile_timeline(blocks, cue_states, cfg):
             )
     if not events:
         raise ValueError("No visual events")
-    for a, b in zip(events, events[1:]):
+    for a, b in itertools.pairwise(events):
         if b["time"] <= a["time"]:
             raise ValueError(f"Cues collide or reverse: {a['id']}, {b['id']}")
-    for a, b in zip(subtitles, subtitles[1:]):
+    for a, b in itertools.pairwise(subtitles):
         # CTC rounding can overlap adjacent boundaries by one acoustic frame.
         if a["end"] > b["start"]:
             if a["end"] - b["start"] > 0.05:

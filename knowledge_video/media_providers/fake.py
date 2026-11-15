@@ -25,7 +25,9 @@ class FakeImageProvider:
             width=request.width,
             height=request.height,
             seed=request.seed,
-            metadata={"prompt_sha256": hashlib.sha256(request.prompt.encode()).hexdigest()},
+            metadata={
+                "prompt_sha256": hashlib.sha256(request.prompt.encode()).hexdigest()
+            },
         )
 
 

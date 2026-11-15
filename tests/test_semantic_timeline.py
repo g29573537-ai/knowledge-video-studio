@@ -1,10 +1,9 @@
-from narration_video.core import parse_script
-
 from knowledge_video.semantic_timeline import (
     build_semantic_timeline,
     resolve_anchor,
     validate_semantic_timeline,
 )
+from narration_video.core import parse_script
 
 
 def aligned_block():

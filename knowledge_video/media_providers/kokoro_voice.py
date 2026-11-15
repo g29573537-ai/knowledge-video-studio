@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 from pathlib import Path
+from typing import Any
 
 import soundfile as sf
+
 from narration_video.core import digest, file_hash, read_json, write_json
 
 
@@ -18,7 +19,7 @@ class KokoroVoice:
         self.lang_code = config.get("language", "a")
         if self.lang_code not in {"a", "b", "e", "f", "h", "i", "j", "p", "z"}:
             self.lang_code = "a"
-        self._pipeline = None
+        self._pipeline: Any = None
 
     def identity(self):
         return {"mode": "kokoro", "voice": self.voice, "speed": self.speed}
@@ -69,7 +70,12 @@ class KokoroVoice:
         write_json(
             metadata,
             {
-                "request": {"engine": "kokoro", "voice": self.voice, "speed": self.speed, "input": text},
+                "request": {
+                    "engine": "kokoro",
+                    "voice": self.voice,
+                    "speed": self.speed,
+                    "input": text,
+                },
                 "identity": identity,
                 "audio_sha256": file_hash(audio),
                 "duration": len(arr) / 24000,

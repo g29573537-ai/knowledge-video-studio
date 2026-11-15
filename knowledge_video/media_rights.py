@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
@@ -43,7 +43,13 @@ ALLOWED_LICENSES = {
     "cc-by-sa-2.0",
 }
 
-REJECTED_LICENSE_TOKENS = ("nc", "nd", "noncommercial", "no-derivatives", "non-commercial")
+REJECTED_LICENSE_TOKENS = (
+    "nc",
+    "nd",
+    "noncommercial",
+    "no-derivatives",
+    "non-commercial",
+)
 
 
 def _normalize_license(value: str) -> str:
@@ -69,7 +75,7 @@ class AssetProvenance(BaseModel):
     source_page_url: str = ""
     original_file_url: str = ""
     attribution_text: str = ""
-    retrieved_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    retrieved_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
     local_path: str = ""
     sha256: str = ""
     size_bytes: int = 0
@@ -110,9 +116,12 @@ class AssetProvenance(BaseModel):
                 reasons.append("terms not checked")
             if not self.prompt_sha256:
                 reasons.append("missing prompt hash")
-            if self.verification_status not in {"verified", "approved", "manual_approved"}:
-                if not reasons:
-                    reasons.append("generated media not approved")
+            if (
+                self.verification_status
+                not in {"verified", "approved", "manual_approved"}
+                and not reasons
+            ):
+                reasons.append("generated media not approved")
         else:
             normalized_license = _normalize_license(self.license_short_name)
             if not normalized_license:
@@ -131,10 +140,15 @@ class AssetProvenance(BaseModel):
 
     def mark_verified(self) -> None:
         self.verification_status = "verified"
-        self.commercial_use = license_is_commercially_usable(self.license_short_name) or self.is_generated()
+        self.commercial_use = (
+            license_is_commercially_usable(self.license_short_name)
+            or self.is_generated()
+        )
         if self.is_generated():
             # Generated media stays non-commercial until terms are explicitly checked.
-            self.commercial_use = bool(self.weights_license_url or self.provider_terms_url) and bool(self.terms_checked_at)
+            self.commercial_use = bool(
+                self.weights_license_url or self.provider_terms_url
+            ) and bool(self.terms_checked_at)
         self.rejection_reason = ""
 
     def mark_manual_review(self, approved: bool, reason: str = "") -> None:
@@ -148,7 +162,9 @@ class AssetProvenance(BaseModel):
             self.rejection_reason = reason or "manual review rejected"
 
     def check_file(self, path: str | Path | None = None) -> list[str]:
-        target = Path(path) if path else Path(self.local_path) if self.local_path else None
+        target = (
+            Path(path) if path else Path(self.local_path) if self.local_path else None
+        )
         reasons = []
         if not target or not target.exists() or target.is_dir():
             if self.local_path or path:
@@ -207,7 +223,7 @@ class MediaRightsRegistry:
             source_page_url=source_page_url,
             original_file_url=original_file_url,
             attribution_text=attribution_text,
-            retrieved_at=retrieved_at or datetime.now(timezone.utc).isoformat(),
+            retrieved_at=retrieved_at or datetime.now(UTC).isoformat(),
             local_path=local_path,
             sha256=sha256,
             size_bytes=size_bytes,
@@ -215,7 +231,9 @@ class MediaRightsRegistry:
             usage_terms_url=usage_terms_url or license_uri,
             commercial_use=license_is_commercially_usable(license_short_name),
             attribution_required=True,
-            verification_status="verified" if license_is_commercially_usable(license_short_name) and license_uri else "manual_review",
+            verification_status="verified"
+            if license_is_commercially_usable(license_short_name) and license_uri
+            else "manual_review",
         )
         return self.add(asset)
 
@@ -247,7 +265,7 @@ class MediaRightsRegistry:
             source_page_url=provider_terms_url,
             original_file_url="",
             attribution_text="AI-generated media; rights depend on model/API terms.",
-            retrieved_at=retrieved_at or datetime.now(timezone.utc).isoformat(),
+            retrieved_at=retrieved_at or datetime.now(UTC).isoformat(),
             local_path=local_path,
             sha256=sha256,
             size_bytes=size_bytes,
@@ -262,9 +280,10 @@ class MediaRightsRegistry:
             weights_license_url=weights_license_url,
             provider_terms_url=provider_terms_url,
             terms_checked_at=terms_checked_at,
-            prompt_sha256=prompt_sha256 or (hashlib.sha256(prompt.encode()).hexdigest() if prompt else ""),
+            prompt_sha256=prompt_sha256
+            or (hashlib.sha256(prompt.encode()).hexdigest() if prompt else ""),
             seed=seed,
-            generated_at=datetime.now(timezone.utc).isoformat(),
+            generated_at=datetime.now(UTC).isoformat(),
         )
         return self.add(asset)
 
@@ -295,7 +314,8 @@ class MediaRightsRegistry:
 
     def export_allowed(self) -> bool:
         return len(self.verify_all()) == 0 and all(
-            a.commercial_use and a.verification_status in {"verified", "approved", "manual_approved"}
+            a.commercial_use
+            and a.verification_status in {"verified", "approved", "manual_approved"}
             for a in self.assets
         )
 
@@ -305,7 +325,9 @@ class MediaRightsRegistry:
     def is_export_allowed(self) -> bool:
         return self.export_allowed()
 
-    def approve_manual(self, asset_id: str, approved: bool = True, reason: str = "") -> None:
+    def approve_manual(
+        self, asset_id: str, approved: bool = True, reason: str = ""
+    ) -> None:
         asset = self.get(asset_id)
         if asset is None:
             raise KeyError(asset_id)
@@ -315,7 +337,7 @@ class MediaRightsRegistry:
         atomic_json(
             Path(path),
             {
-                "generated_at": datetime.now(timezone.utc).isoformat(),
+                "generated_at": datetime.now(UTC).isoformat(),
                 "assets": [a.model_dump() for a in self.assets],
                 "export_allowed": self.export_allowed(),
                 "issues": self.verify_all(),
@@ -336,7 +358,7 @@ class MediaRightsRegistry:
         }
 
     @classmethod
-    def from_sidecar(cls, path: str | Path) -> "MediaRightsRegistry":
+    def from_sidecar(cls, path: str | Path) -> MediaRightsRegistry:
         data = json.loads(Path(path).read_text(encoding="utf-8"))
         assets = [AssetProvenance.model_validate(x) for x in data.get("assets", [])]
         return cls(assets)

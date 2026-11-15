@@ -18,7 +18,11 @@ class LocalProceduralImageProvider:
         image = Image.new("RGB", (request.width, request.height), "#1f2937")
         draw = ImageDraw.Draw(image)
         if request.width > 40 and request.height > 40:
-            draw.rectangle((20, 20, request.width - 20, request.height - 20), outline="#93c5fd", width=4)
+            draw.rectangle(
+                (20, 20, request.width - 20, request.height - 20),
+                outline="#93c5fd",
+                width=4,
+            )
         draw.text((40, 40), request.prompt[:80], fill="white")
         image.save(output)
         return AssetResult(
@@ -29,5 +33,7 @@ class LocalProceduralImageProvider:
             width=request.width,
             height=request.height,
             seed=request.seed,
-            metadata={"prompt_sha256": hashlib.sha256(request.prompt.encode()).hexdigest()},
+            metadata={
+                "prompt_sha256": hashlib.sha256(request.prompt.encode()).hexdigest()
+            },
         )

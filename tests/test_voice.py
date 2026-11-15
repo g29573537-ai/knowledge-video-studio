@@ -44,7 +44,7 @@ def test_cache_tracks_text_speed_reference_and_partial_download(tmp_path, monkey
 def test_invalid_audio_never_enters_cache(tmp_path, monkeypatch):
     client = OmniVoice({"mode": "design"})
     monkeypatch.setattr(client, "request", lambda *a, **kw: b'{"error":"not audio"}')
-    with pytest.raises(Exception):
+    with pytest.raises(Exception):  # noqa: B017
         client.synthesize("测试", tmp_path, {})
     assert not list(tmp_path.glob("*.wav"))
     assert not list(tmp_path.glob("*.json"))
