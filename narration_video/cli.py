@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 import json
 import shutil
 import time
@@ -22,13 +23,20 @@ def synthesize(cfg):
     import numpy as np
     import soundfile as sf
 
-    if cfg["voice"].get("backend") == "kaggle_cosyvoice3":
+    backend = cfg["voice"].get("backend", "omnivoice")
+    if backend == "kaggle_cosyvoice3":
         from knowledge_video.media_providers.kaggle_voice import KaggleVoice
 
         service = KaggleVoice(cfg["voice"])
         identity = service.identity() if hasattr(service, "identity") else {}
         if hasattr(service, "wait_ready"):
             service.wait_ready()
+    elif backend == "kokoro":
+        from knowledge_video.media_providers.kokoro_voice import KokoroVoice
+
+        service = KokoroVoice(cfg["voice"])
+        identity = service.identity()
+        service.wait_ready()
     else:
         service = OmniVoice(cfg["voice"])
         identity = service.identity()
@@ -39,7 +47,7 @@ def synthesize(cfg):
     blocks = []
     # Stable hashes allow reordered blocks to reuse their speech without using stale text/voices.
     for i, block in enumerate(cfg["blocks"], 1):
-        print(f"VOICE {i}/{len(cfg['blocks'])} {block['id']}", flush=True)
+        print(f"[{datetime.now().isoformat(timespec='seconds')}] VOICE {i}/{len(cfg['blocks'])} {block['id']}", flush=True)
         raw, hit = service.synthesize(block["text"], cache, identity)
         audio = normalized / f"{file_hash(raw)}.wav"
         if not audio.exists():
@@ -186,9 +194,9 @@ def execute(cfg, stage):
             from .render import export_video, render_deck
 
             slides = render_deck(cfg, timeline)
-            print("EXPORT rendering video to narration clock", flush=True)
+            print(f"[{datetime.now().isoformat(timespec='seconds')}] EXPORT rendering video to narration clock", flush=True)
             output = export_video(cfg, timeline, slides)
-            print(f"VIDEO {output}", flush=True)
+            print(f"[{datetime.now().isoformat(timespec='seconds')}] VIDEO {output}", flush=True)
         write_json(
             status,
             {

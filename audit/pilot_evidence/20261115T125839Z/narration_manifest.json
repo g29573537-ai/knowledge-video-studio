@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "voice_identity": {
+    "mode": "kokoro",
+    "voice": "af_heart",
+    "speed": 1.0
+  },
+  "blocks": [
+    {
+      "id": "block_1",
+      "text": "A leaf makes its own food using sunlight. It takes in carbon dioxide from the air and water from the soil. Inside, a green pigment called chlorophyll captures energy from sunlight. This process is called photosynthesis.",
+      "cues": [
+        {
+          "id": "block_1",
+          "char_index": 0
+        }
+      ],
+      "audio": "/workspaces/pilot-kokoro-output/build/audio/c471d020abc0edddd7814425f221521ee9def89b603c2a12ae73aed379b4bb5a.wav",
+      "cache_hit": false,
+      "offset": 0.0,
+      "duration": 15.05
+    },
+    {
+      "id": "block_2",
+      "text": "The plant uses that energy to turn carbon dioxide and water into sugar. Sugar stores energy for growth. Oxygen is released into the air as a byproduct. The process has many steps, but the inputs and outputs are simple.",
+      "cues": [
+        {
+          "id": "block_2",
+          "char_index": 0
+        }
+      ],
+      "audio": "/workspaces/pilot-kokoro-output/build/audio/b05b68d67b0eeeee2e97238139355877ea9a298d6eb8b4998d446affa3b56b00.wav",
+      "cache_hit": false,
+      "offset": 15.5,
+      "duration": 15.225
+    },
+    {
+      "id": "block_3",
+      "text": "Plants, algae, and cyanobacteria perform photosynthesis. Most other organisms depend on the sugar and oxygen they produce, directly or indirectly. The energy in grass or bread began as sunlight captured by a plant. Photosynthesis supports nearly all life on Earth.",
+      "cues": [
+        {
+          "id": "block_3",
+          "char_index": 0
+        }
+      ],
+      "audio": "/workspaces/pilot-kokoro-output/build/audio/6b41e2698cf7d14976c98b1b74e283ce3cff143f95524f746f8dd5d2518769a2.wav",
+      "cache_hit": false,
+      "offset": 31.175,
+      "duration": 18.7
+    }
+  ],
+  "duration": 41.5625,
+  "source_duration": 49.875,
+  "source_audio_sha256": "6682844a1406e54aac9e02de19ddeed6a2ad352f2494dd0810ae7b523904e9a2",
+  "playback_speed": 1.2,
+  "sample_rate": 24000,
+  "audio_sha256": "00ae35f760d51826978ec780a6aa518805c7bc78292a799a1ebe1f6fd0625296",
+  "script_sha256": "2c648cec617a7b3197fe345ccde9b6e1ea8e2ea28791a79abd3afa4b29b21bd7",
+  "voice_config_hash": "74f8b0f85328780525474d3ab42656beabe90811c8dd90723e4e39c693e8b41b",
+  "pause_between_blocks": 0.45
+}

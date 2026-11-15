@@ -7,6 +7,7 @@ import os
 import re
 import shutil
 import sys
+from datetime import datetime
 from pathlib import Path
 
 import jsonschema
@@ -57,7 +58,8 @@ class Workflow:
     def step(self, name, message):
         if self.cancel.is_set():
             raise Cancelled("任务已取消")
-        self.notify(message, stage=name)
+        stamped = f"[{datetime.now().isoformat(timespec='seconds')}] {message}"
+        self.notify(stamped, stage=name)
 
     def llm(self, name, instruction, payload, model, images=None):
         target = self.root / (name + ".json")
@@ -83,7 +85,7 @@ class Workflow:
                     return model.model_validate_json(target.read_text(encoding="utf-8"))
                 except Exception:
                     pass
-        self.notify("模型正在处理 " + name)
+        self.notify(f"[{datetime.now().isoformat(timespec='seconds')}] 模型正在处理 " + name)
         error = None
         for attempt in range(self.request.max_repairs + 1):
             try:

@@ -9,6 +9,16 @@
       "path": "/workspaces/pilot-kokoro-output",
       "size_bytes": 13328755,
       "reason": "Pilot run artifacts; reproducible and already summarized in PILOT_VIDEO_REPORT.md"
+    },
+    {
+      "path": ".runtime/omnivoice",
+      "size_bytes": 7386040048,
+      "reason": "OmniVoice TTS runtime no longer primary voice; forced alignment moved to .runtime/alignment; reinstallable via ./scripts/install"
+    },
+    {
+      "path": ".runtime/alignment",
+      "size_bytes": 3024467375,
+      "reason": "Heavy ML venv (torch/whisperx/kokoro) violates storage policy; forced alignment must run on Kaggle, not in Codespace"
     }
   ]
 }

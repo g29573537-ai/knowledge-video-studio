@@ -1,0 +1,59 @@
+{
+  "title": "What Is Photosynthesis",
+  "description": "A one-minute explanation of how plants use sunlight, carbon dioxide, and water to produce sugar and oxygen.",
+  "blocks": [
+    {
+      "id": "block_1",
+      "slide_id": "slide_1",
+      "narration": "A leaf makes its own food using sunlight. It takes in carbon dioxide from the air and water from the soil. Inside, a green pigment called chlorophyll captures energy from sunlight. This process is called photosynthesis.",
+      "headline": "How do plants make food?",
+      "points": [
+        "Leaves absorb carbon dioxide and water.",
+        "Chlorophyll captures sunlight energy.",
+        "This process is called photosynthesis."
+      ],
+      "source_ids": [
+        "S1"
+      ],
+      "visual_role": "hero",
+      "semantic_version": 1
+    },
+    {
+      "id": "block_2",
+      "slide_id": "slide_2",
+      "narration": "The plant uses that energy to turn carbon dioxide and water into sugar. Sugar stores energy for growth. Oxygen is released into the air as a byproduct. The process has many steps, but the inputs and outputs are simple.",
+      "headline": "What goes in and what comes out?",
+      "points": [
+        "Carbon dioxide and water go in.",
+        "Sunlight energy helps build sugar.",
+        "Oxygen is released into the air."
+      ],
+      "source_ids": [
+        "S1"
+      ],
+      "visual_role": "explanatory_core",
+      "semantic_version": 1
+    },
+    {
+      "id": "block_3",
+      "slide_id": "slide_3",
+      "narration": "Plants, algae, and cyanobacteria perform photosynthesis. Most other organisms depend on the sugar and oxygen they produce, directly or indirectly. The energy in grass or bread began as sunlight captured by a plant. Photosynthesis supports nearly all life on Earth.",
+      "headline": "Why does it matter?",
+      "points": [
+        "Plants, algae, and cyanobacteria are photoautotrophs.",
+        "Most other organisms depend on them.",
+        "Photosynthesis supports food chains and breathable air."
+      ],
+      "source_ids": [
+        "S1"
+      ],
+      "visual_role": "bridge",
+      "semantic_version": 1
+    }
+  ],
+  "uncertainties": [
+    "The summary equation is simplified; real photosynthesis includes many intermediate steps and energy carriers such as ATP and NADPH.",
+    "The claim that photosynthesis supports nearly all life is a general principle, not a precise global count.",
+    "Some bacteria use chemical energy instead of sunlight and do not perform photosynthesis."
+  ]
+}
