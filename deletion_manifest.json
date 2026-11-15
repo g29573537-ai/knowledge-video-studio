@@ -1,0 +1,14 @@
+{
+  "entries": [
+    {
+      "path": ".runtime/omnivoice",
+      "size_bytes": 7384434512,
+      "reason": "Private OmniVoice runtime; reinstallable via ./scripts/install --skip-system-deps; frees ~7 GB"
+    },
+    {
+      "path": "/workspaces/pilot-kokoro-output",
+      "size_bytes": 13328755,
+      "reason": "Pilot run artifacts; reproducible and already summarized in PILOT_VIDEO_REPORT.md"
+    }
+  ]
+}
