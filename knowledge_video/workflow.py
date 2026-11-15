@@ -109,7 +109,8 @@ class Workflow:
                 raise RuntimeError("缺少依赖 " + tool + "，请按 README 安装")
         if not Path(r.chrome or chrome_path()).is_file():
             raise RuntimeError("未找到 Chrome / Chromium，请在设置中填写路径")
-        OmniVoice({"base_url": r.voice_url}).wait_ready()
+        if r.voice_backend == "omnivoice":
+            OmniVoice({"base_url": r.voice_url}).wait_ready()
         self.step("research", "整理学习目标与资料")
         info = inspect_slides(r.slides_path) if r.slides_mode == "existing" else None
         plan = self.llm(
@@ -317,6 +318,7 @@ class Workflow:
                 "speed": 1.0,
                 "timeout_seconds": 900,
                 "backend": r.voice_backend,
+                "kokoro_voice": "af_heart",
             },
             "alignment": {
                 "language": r.language,
