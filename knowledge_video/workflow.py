@@ -423,54 +423,59 @@ class Workflow:
                 validate_generated_html(deck.html, lesson)
                 (p / "slides.html").write_text(deck.html, encoding="utf-8")
         self.step("voice", "准备参考声音")
-        service = OmniVoice(cfg["voice"])
-        service.wait_ready()
-        profile_file = p / "voice_profile.json"
-        if not r.profile_id:
-            if profile_file.exists():
-                profile = json.loads(profile_file.read_text())
-            else:
-                voice = Path(r.voice_path).expanduser()
-                if not voice.is_file():
-                    raise ValueError("参考录音不存在，请上传录音或填写有效路径")
-                reference = p / "reference"
-                reference.mkdir(exist_ok=True)
-                if r.reference_text:
-                    from .media import prepare_reference
-
-                    prepare_reference(str(voice), reference)
-                    (reference / "reference.txt").write_text(
-                        r.reference_text, encoding="utf-8"
-                    )
-                elif not (reference / "reference.txt").exists():
-                    run_process(
-                        [
-                            sys.executable,
-                            "-m",
-                            "knowledge_video.media",
-                            "reference",
-                            voice,
-                            "--output",
-                            reference,
-                            "--language",
-                            r.reference_language,
-                            "--asr-model",
-                            r.asr_model,
-                        ],
-                        p,
-                        self.cancel,
-                        600,
-                        log=self.notify,
-                        env=self.env,
-                    )
-                profile = service.import_voice(
-                    reference / "reference.wav",
-                    (reference / "reference.txt").read_text(),
-                    "Knowledge Studio " + p.name[:8],
-                )
-                atomic_json(profile_file, profile)
-            cfg["voice"]["profile_id"] = profile["id"]
+        if r.voice_backend == "kokoro":
+            service = None
+            cfg["voice"]["profile_id"] = cfg["voice"].get("profile_id", "kokoro-af_heart")
             atomic_json(p / "project.json", cfg)
+        else:
+            service = OmniVoice(cfg["voice"])
+            service.wait_ready()
+            profile_file = p / "voice_profile.json"
+            if not r.profile_id:
+                if profile_file.exists():
+                    profile = json.loads(profile_file.read_text())
+                else:
+                    voice = Path(r.voice_path).expanduser()
+                    if not voice.is_file():
+                        raise ValueError("参考录音不存在，请上传录音或填写有效路径")
+                    reference = p / "reference"
+                    reference.mkdir(exist_ok=True)
+                    if r.reference_text:
+                        from .media import prepare_reference
+
+                        prepare_reference(str(voice), reference)
+                        (reference / "reference.txt").write_text(
+                            r.reference_text, encoding="utf-8"
+                        )
+                    elif not (reference / "reference.txt").exists():
+                        run_process(
+                            [
+                                sys.executable,
+                                "-m",
+                                "knowledge_video.media",
+                                "reference",
+                                voice,
+                                "--output",
+                                reference,
+                                "--language",
+                                r.reference_language,
+                                "--asr-model",
+                                r.asr_model,
+                            ],
+                            p,
+                            self.cancel,
+                            600,
+                            log=self.notify,
+                            env=self.env,
+                        )
+                    profile = service.import_voice(
+                        reference / "reference.wav",
+                        (reference / "reference.txt").read_text(),
+                        "Knowledge Studio " + p.name[:8],
+                    )
+                    atomic_json(profile_file, profile)
+                cfg["voice"]["profile_id"] = profile["id"]
+                atomic_json(p / "project.json", cfg)
         self.step("production", "合成配音、逐字对齐并导出视频")
         run_process(
             [
