@@ -67,7 +67,7 @@ class KaggleVoice:
             "-t",
             str(self.timeout),
             "--accelerator",
-            "gpu" if self.enable_gpu else "cpu",
+            "NvidiaTeslaT4" if self.enable_gpu else "none",
         ]
         # The installed Kaggle CLI spelling for internet may vary; keep the push
         # minimal and rely on kernel-metadata.json for the rest.
@@ -156,7 +156,7 @@ class KaggleVoice:
             json.dumps(
                 {
                     "id": self.kernel_slug,
-                    "title": "Knowledge Video Studio voice",
+                    "title": self.kernel_slug.split("/")[-1],
                     "code_file": "run.py",
                     "language": "python",
                     "kernel_type": "script",
