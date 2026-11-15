@@ -15,11 +15,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-noto-cjk
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-noto-cjk gitleaks
       - name: Require Chrome for rendering tests
         run: command -v google-chrome || command -v chromium || command -v chromium-browser
       - run: pip install -e '.[dev]'
-      - run: pytest -q
+      - name: Pre-commit gate
+        run: pre-commit run --all-files
+      - run: pytest -q --cov=knowledge_video --cov=narration_video --cov-fail-under=60
       - run: node --check knowledge_video/static/app.js
       - run: node --check narration_video/render_deck.mjs
       - run: python scripts/audit_release.py --history
