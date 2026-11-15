@@ -3,10 +3,10 @@ from __future__ import annotations
 import json
 import os
 import time
-import urllib.error
-import urllib.request
 import uuid
 from pathlib import Path
+
+import requests
 
 from .core import digest, file_hash, probe, read_json, write_json
 
@@ -24,14 +24,26 @@ class OmniVoice:
             headers["Authorization"] = "Bearer " + os.environ[key_env]
         if data is not None:
             headers["Content-Type"] = content_type
-        req = urllib.request.Request(self.base + route, data=data, headers=headers)
+        url = self.base + route
         try:
-            with urllib.request.urlopen(req, timeout=timeout or self.timeout) as res:
-                return res.read()
-        except urllib.error.HTTPError as e:
-            detail = e.read(2000).decode(errors="replace")
-            raise RuntimeError(f"OmniVoice {route}: HTTP {e.code}: {detail}") from e
-        except (urllib.error.URLError, TimeoutError) as e:
+            if data is None:
+                response = requests.get(
+                    url, headers=headers, timeout=(20, timeout or self.timeout)
+                )
+            else:
+                response = requests.post(
+                    url,
+                    headers=headers,
+                    data=data,
+                    timeout=(20, timeout or self.timeout),
+                )
+            response.raise_for_status()
+            return response.content
+        except requests.HTTPError as e:
+            detail = getattr(e.response, "text", "")[:2000]
+            code = getattr(e.response, "status_code", "unknown")
+            raise RuntimeError(f"OmniVoice {route}: HTTP {code}: {detail}") from e
+        except requests.RequestException as e:
             raise RuntimeError(
                 f"OmniVoice {route} unavailable or timed out: {e}"
             ) from e
