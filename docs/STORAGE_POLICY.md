@@ -30,3 +30,15 @@
 - Before deleting anything, verify it is not a dependency of a mandatory step.
   Forced alignment's acoustic model is mandatory; do not delete the environment
   that provides it without a planned replacement.
+
+## Superpowers discipline integration
+
+When Superpowers is installed in OpenCode, apply these skills automatically:
+
+- `systematic-debugging` before changing code for any failed test, Kaggle job, or pipeline stage.
+- `verification-before-completion` before claiming any pilot/video/QC result is ready.
+- `test-driven-development` before adding new provider/timeline/QC behavior.
+- `writing-plans` before multi-step storage or Kaggle migration work.
+- `using-git-worktrees` for isolated feature work when needed.
+
+No unverified third-party skills may be installed without explicit owner approval.
