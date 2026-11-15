@@ -9,8 +9,9 @@ import shutil
 import subprocess
 import tarfile
 import tempfile
-import urllib.request
 from pathlib import Path
+
+import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 OMNI_URL = "https://github.com/Galest/OmniVoice-Studio.git"
@@ -72,10 +73,12 @@ def install_node(runtime):
     base = f"https://nodejs.org/dist/v{NODE_VERSION}/"
     with tempfile.TemporaryDirectory() as folder:
         archive = Path(folder) / filename
-        urllib.request.urlretrieve(base + filename, archive)
-        sums = (
-            urllib.request.urlopen(base + "SHASUMS256.txt", timeout=60).read().decode()
-        )
+        download = requests.get(base + filename, timeout=60)
+        download.raise_for_status()
+        archive.write_bytes(download.content)
+        sums_response = requests.get(base + "SHASUMS256.txt", timeout=60)
+        sums_response.raise_for_status()
+        sums = sums_response.text
         expected = next(
             line.split()[0]
             for line in sums.splitlines()
@@ -84,7 +87,18 @@ def install_node(runtime):
         if hashlib.sha256(archive.read_bytes()).hexdigest() != expected:
             raise RuntimeError("Node download checksum mismatch")
         with tarfile.open(archive) as tar:
-            tar.extractall(folder, filter="data")
+            root = Path(folder).resolve()
+            for member in tar.getmembers():
+                target = (Path(folder) / member.name).resolve()
+                if target != root and not str(target).startswith(str(root) + os.sep):
+                    raise RuntimeError("Unsafe archive member: " + member.name)
+                if member.isdir():
+                    target.mkdir(parents=True, exist_ok=True)
+                elif member.isfile():
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    source = tar.extractfile(member)
+                    if source is not None:
+                        target.write_bytes(source.read())
         shutil.copytree(Path(folder) / name, runtime / "node", dirs_exist_ok=True)
 
 
