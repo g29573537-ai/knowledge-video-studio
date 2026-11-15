@@ -54,3 +54,15 @@ The external OpenAI-compatible provider now works with Kilo Gateway:
 OmniVoice cannot stay loaded on this CPU-only Codespace: the service repeatedly reaches about 38-44% while loading TTS weights and then stops responding. Therefore `Workflow.run()` cannot pass its preflight voice check, and no MP4 is produced.
 
 No video, `qc_report.json`, or `quality.json` was generated. No placeholder or fixture media was used as a successful result.
+
+## Pilot run V1 (Kokoro af_heart) — 2026-11-15
+
+- LLM provider: Kilo Gateway `kilo-auto/free` worked (research/lesson/deck/visual review all completed).
+- Voice backend: Kokoro `af_heart` generated audio for 3 blocks.
+- Failure stage: forced alignment (`narration_video/alignment.py::align_blocks` / `compile_timeline`).
+- Exact error:
+  ```
+  RuntimeError: 段落 block_1 在 2 次重做后仍未通过：Alignment coverage 21.6% < 90.0%; review/re-record narration
+  ```
+- Cause: Kokoro's synthesized speech does not satisfy the exact-script forced-alignment coverage gate (21.6%, 14.8%, 15.0% across blocks). The pipeline correctly refused to continue.
+- No MP4, `qc_report.json`, or `quality.json` was produced. No partial result is reported as success.
