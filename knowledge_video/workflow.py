@@ -202,6 +202,17 @@ class Workflow:
             if notice not in lesson.uncertainties:
                 lesson.uncertainties.append(notice)
         validate_lesson(lesson, info)
+        if r.language != "zh":
+            import re
+
+            cjk = re.compile(r"[\u3400-\u9fff]")
+            for block in lesson.blocks:
+                fields = [block.narration, block.headline, *block.points]
+                if any(cjk.search(str(field or "")) for field in fields):
+                    raise ValueError(
+                        f"Generated lesson language does not match requested language {r.language!r}: "
+                        f"block {block.id} contains CJK text"
+                    )
         valid_sources = {s["id"] for s in sources}
         if any(set(b.source_ids) - valid_sources for b in lesson.blocks):
             raise ValueError("讲稿引用了不存在的资料编号")
