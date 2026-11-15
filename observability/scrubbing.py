@@ -46,4 +46,8 @@ def scrub_value(value: Any) -> Any:
 
 
 def safe_path(path: str | Path) -> str:
-    return str(path).replace(str(Path.home()), "<home>").replace("/workspaces", "<workspaces>")
+    return (
+        str(path)
+        .replace(str(Path.home()), "<home>")
+        .replace("/workspaces", "<workspaces>")
+    )
