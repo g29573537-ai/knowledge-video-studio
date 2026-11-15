@@ -41,6 +41,18 @@
   verified replacement exists.
 - Run `df -h /workspaces` before and after every major pipeline step.
 
+## Retry policy for Kaggle alignment
+
+- Push one alignment kernel at a time.
+- Poll status every 30 seconds.
+- If the kernel is still `QUEUED` after 15 minutes, stop waiting for that attempt.
+- Retry the same job up to 3 times total.
+- If all 3 attempts stay `QUEUED` past the 15-minute limit, report
+  `Kaggle queue stuck` and stop with an explicit non-success status.
+- Do not silently fall back to `.runtime/omnivoice` or any local ML runtime.
+- A Kaggle alignment path counts as verified only after 2-3 consecutive
+  successful runs (`COMPLETE` + coverage >= 0.9), not after a single success.
+
 ## Step 1 result (20261115T162206Z)
 
 - Kernel: forts845/kvs-align-smoke2
