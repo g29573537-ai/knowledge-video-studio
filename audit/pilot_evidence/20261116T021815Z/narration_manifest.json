@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "voice_identity": {
+    "mode": "kokoro",
+    "voice": "af_heart",
+    "speed": 1.0
+  },
+  "blocks": [
+    {
+      "id": "block_1",
+      "text": "Look at a green leaf in sunlight. How does it make its own food? In one minute, we follow a single leaf to see how light energy becomes stored chemical energy.",
+      "cues": [
+        {
+          "id": "block_1",
+          "char_index": 0
+        }
+      ],
+      "audio": "/workspaces/pilot-kokoro-output/build/audio/6f1610c5c4cb52f657fb1b893a7d571b579b2701176abc0520a72cca224224bd.wav",
+      "cache_hit": false,
+      "offset": 0.0,
+      "duration": 9.975
+    },
+    {
+      "id": "block_2",
+      "text": "The leaf takes in carbon dioxide from the air and water from the soil. Inside its cells, chloroplasts hold chlorophyll, a green pigment that captures sunlight. The plant uses that energy to build sugar. It releases oxygen into the air. Put simply, carbon dioxide, water, and light energy produce glucose and oxygen.",
+      "cues": [
+        {
+          "id": "block_2",
+          "char_index": 0
+        }
+      ],
+      "audio": "/workspaces/pilot-kokoro-output/build/audio/2fec9d364948ab4bdc842978fef2b2e1fe934e7b42901154d140daa3dd837a84.wav",
+      "cache_hit": false,
+      "offset": 10.425,
+      "duration": 21.55
+    },
+    {
+      "id": "block_3",
+      "text": "The sugar feeds the plant, and the oxygen enters the atmosphere. Plants, algae, and cyanobacteria use this process, so most food chains begin with it. This lesson covers oxygenic photosynthesis, the common form that releases oxygen.",
+      "cues": [
+        {
+          "id": "block_3",
+          "char_index": 0
+        }
+      ],
+      "audio": "/workspaces/pilot-kokoro-output/build/audio/0b598d395f740a3b872d8145f31b13bdcaab983f783e3d3e0464763201688163.wav",
+      "cache_hit": false,
+      "offset": 32.425,
+      "duration": 16.275
+    }
+  ],
+  "duration": 40.583333333333336,
+  "source_duration": 48.7,
+  "source_audio_sha256": "6451d3b0277e99efc7ae8d001fe9b0198c1bd3a794c74af8138088ad54524339",
+  "playback_speed": 1.2,
+  "sample_rate": 24000,
+  "audio_sha256": "30a9cdae58bc8e0b5267a4afc4acdadbb6f71e5478aaca141425d4f824714944",
+  "script_sha256": "7bea0ac10b4443850ad9a7884259052fb503179c117e497ae27310d28b968f74",
+  "voice_config_hash": "74f8b0f85328780525474d3ab42656beabe90811c8dd90723e4e39c693e8b41b",
+  "pause_between_blocks": 0.45
+}

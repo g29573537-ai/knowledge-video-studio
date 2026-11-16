@@ -1,0 +1,61 @@
+{
+  "title": "What Is Photosynthesis",
+  "description": "A one-minute explanation of photosynthesis for general readers, using a leaf example to show inputs, outputs, and why it matters.",
+  "blocks": [
+    {
+      "id": "block_1",
+      "slide_id": "slide_1",
+      "narration": "Look at a green leaf in sunlight. How does it make its own food? In one minute, we follow a single leaf to see how light energy becomes stored chemical energy.",
+      "headline": "How does a leaf make food?",
+      "points": [
+        "A green leaf in sunlight",
+        "The question: how does it make food?",
+        "One leaf as our example"
+      ],
+      "source_ids": [],
+      "visual_role": "hero",
+      "semantic_version": 1
+    },
+    {
+      "id": "block_2",
+      "slide_id": "slide_2",
+      "narration": "The leaf takes in carbon dioxide from the air and water from the soil. Inside its cells, chloroplasts hold chlorophyll, a green pigment that captures sunlight. The plant uses that energy to build sugar. It releases oxygen into the air. Put simply, carbon dioxide, water, and light energy produce glucose and oxygen.",
+      "headline": "Photosynthesis in a leaf",
+      "points": [
+        "Carbon dioxide and water enter the leaf",
+        "Chlorophyll captures sunlight in chloroplasts",
+        "Glucose forms and oxygen is released",
+        "Carbon dioxide plus water plus light yields glucose plus oxygen"
+      ],
+      "source_ids": [
+        "S1",
+        "S2"
+      ],
+      "visual_role": "explanatory_core",
+      "semantic_version": 1
+    },
+    {
+      "id": "block_3",
+      "slide_id": "slide_3",
+      "narration": "The sugar feeds the plant, and the oxygen enters the atmosphere. Plants, algae, and cyanobacteria use this process, so most food chains begin with it. This lesson covers oxygenic photosynthesis, the common form that releases oxygen.",
+      "headline": "Why it matters",
+      "points": [
+        "Sugar feeds the plant",
+        "Oxygen enters the atmosphere",
+        "Used by plants, algae, and some bacteria",
+        "Supports most food chains"
+      ],
+      "source_ids": [
+        "S1",
+        "S2"
+      ],
+      "visual_role": "bridge",
+      "semantic_version": 1
+    }
+  ],
+  "uncertainties": [
+    "Ocean organisms produce a large share of atmospheric oxygen, but the exact share is an estimate.",
+    "Some bacteria perform photosynthesis without releasing oxygen; this lesson focuses on oxygenic photosynthesis.",
+    "The simple equation summarizes many steps; glucose is often assembled through intermediates such as G3P."
+  ]
+}

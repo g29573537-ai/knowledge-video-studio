@@ -1,0 +1,1857 @@
+{
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 3.888,
+      "text": "The sugar feeds the plant, and the oxygen enters the atmosphere.",
+      "words": [
+        {
+          "word": "The",
+          "start": 0.0,
+          "end": 0.401,
+          "score": 0.91
+        },
+        {
+          "word": "sugar",
+          "start": 0.461,
+          "end": 0.742,
+          "score": 0.757
+        },
+        {
+          "word": "feeds",
+          "start": 0.822,
+          "end": 1.082,
+          "score": 0.957
+        },
+        {
+          "word": "the",
+          "start": 1.142,
+          "end": 1.223,
+          "score": 0.833
+        },
+        {
+          "word": "plant,",
+          "start": 1.263,
+          "end": 1.563,
+          "score": 0.88
+        },
+        {
+          "word": "and",
+          "start": 1.924,
+          "end": 2.004,
+          "score": 0.686
+        },
+        {
+          "word": "the",
+          "start": 2.024,
+          "end": 2.105,
+          "score": 0.572
+        },
+        {
+          "word": "oxygen",
+          "start": 2.245,
+          "end": 2.686,
+          "score": 0.797
+        },
+        {
+          "word": "enters",
+          "start": 2.826,
+          "end": 3.127,
+          "score": 0.84
+        },
+        {
+          "word": "the",
+          "start": 3.167,
+          "end": 3.267,
+          "score": 0.668
+        },
+        {
+          "word": "atmosphere.",
+          "start": 3.367,
+          "end": 3.888,
+          "score": 0.74
+        }
+      ],
+      "chars": [
+        {
+          "char": "T",
+          "start": 0.0,
+          "end": 0.341,
+          "score": 0.883
+        },
+        {
+          "char": "h",
+          "start": 0.341,
+          "end": 0.361,
+          "score": 1.0
+        },
+        {
+          "char": "e",
+          "start": 0.361,
+          "end": 0.401,
+          "score": 0.847
+        },
+        {
+          "char": " ",
+          "start": 0.401,
+          "end": 0.461,
+          "score": 0.691
+        },
+        {
+          "char": "s",
+          "start": 0.461,
+          "end": 0.541,
+          "score": 0.75
+        },
+        {
+          "char": "u",
+          "start": 0.541,
+          "end": 0.601,
+          "score": 0.667
+        },
+        {
+          "char": "g",
+          "start": 0.601,
+          "end": 0.641,
+          "score": 1.0
+        },
+        {
+          "char": "a",
+          "start": 0.641,
+          "end": 0.681,
+          "score": 0.702
+        },
+        {
+          "char": "r",
+          "start": 0.681,
+          "end": 0.742,
+          "score": 0.665
+        },
+        {
+          "char": " ",
+          "start": 0.742,
+          "end": 0.822,
+          "score": 0.701
+        },
+        {
+          "char": "f",
+          "start": 0.822,
+          "end": 0.882,
+          "score": 1.0
+        },
+        {
+          "char": "e",
+          "start": 0.882,
+          "end": 0.942,
+          "score": 1.0
+        },
+        {
+          "char": "e",
+          "start": 0.942,
+          "end": 0.982,
+          "score": 0.997
+        },
+        {
+          "char": "d",
+          "start": 0.982,
+          "end": 1.062,
+          "score": 0.789
+        },
+        {
+          "char": "s",
+          "start": 1.062,
+          "end": 1.082,
+          "score": 1.0
+        },
+        {
+          "char": " ",
+          "start": 1.082,
+          "end": 1.142,
+          "score": 0.332
+        },
+        {
+          "char": "t",
+          "start": 1.142,
+          "end": 1.183,
+          "score": 0.501
+        },
+        {
+          "char": "h",
+          "start": 1.183,
+          "end": 1.203,
+          "score": 1.0
+        },
+        {
+          "char": "e",
+          "start": 1.203,
+          "end": 1.223,
+          "score": 0.999
+        },
+        {
+          "char": " ",
+          "start": 1.223,
+          "end": 1.263,
+          "score": 0.5
+        },
+        {
+          "char": "p",
+          "start": 1.263,
+          "end": 1.303,
+          "score": 0.998
+        },
+        {
+          "char": "l",
+          "start": 1.303,
+          "end": 1.383,
+          "score": 1.0
+        },
+        {
+          "char": "a",
+          "start": 1.383,
+          "end": 1.443,
+          "score": 0.667
+        },
+        {
+          "char": "n",
+          "start": 1.443,
+          "end": 1.503,
+          "score": 0.792
+        },
+        {
+          "char": "t",
+          "start": 1.503,
+          "end": 1.523,
+          "score": 0.988
+        },
+        {
+          "char": ",",
+          "start": 1.523,
+          "end": 1.563,
+          "score": 0.836
+        },
+        {
+          "char": " ",
+          "start": 1.563,
+          "end": 1.924,
+          "score": 0.949
+        },
+        {
+          "char": "a",
+          "start": 1.924,
+          "end": 1.944,
+          "score": 1.0
+        },
+        {
+          "char": "n",
+          "start": 1.944,
+          "end": 1.964,
+          "score": 0.557
+        },
+        {
+          "char": "d",
+          "start": 1.964,
+          "end": 2.004,
+          "score": 0.5
+        },
+        {
+          "char": " ",
+          "start": 2.004,
+          "end": 2.024,
+          "score": 0.447
+        },
+        {
+          "char": "t",
+          "start": 2.024,
+          "end": 2.064,
+          "score": 0.5
+        },
+        {
+          "char": "h",
+          "start": 2.064,
+          "end": 2.084,
+          "score": 1.0
+        },
+        {
+          "char": "e",
+          "start": 2.084,
+          "end": 2.105,
+          "score": 0.216
+        },
+        {
+          "char": " ",
+          "start": 2.105,
+          "end": 2.245,
+          "score": 0.714
+        },
+        {
+          "char": "o",
+          "start": 2.245,
+          "end": 2.305,
+          "score": 0.664
+        },
+        {
+          "char": "x",
+          "start": 2.305,
+          "end": 2.465,
+          "score": 1.0
+        },
+        {
+          "char": "y",
+          "start": 2.465,
+          "end": 2.525,
+          "score": 1.0
+        },
+        {
+          "char": "g",
+          "start": 2.525,
+          "end": 2.606,
+          "score": 0.93
+        },
+        {
+          "char": "e",
+          "start": 2.606,
+          "end": 2.626,
+          "score": 0.862
+        },
+        {
+          "char": "n",
+          "start": 2.626,
+          "end": 2.686,
+          "score": 0.326
+        },
+        {
+          "char": " ",
+          "start": 2.686,
+          "end": 2.826,
+          "score": 0.714
+        },
+        {
+          "char": "e",
+          "start": 2.826,
+          "end": 2.846,
+          "score": 0.998
+        },
+        {
+          "char": "n",
+          "start": 2.846,
+          "end": 2.926,
+          "score": 0.75
+        },
+        {
+          "char": "t",
+          "start": 2.926,
+          "end": 2.986,
+          "score": 1.0
+        },
+        {
+          "char": "e",
+          "start": 2.986,
+          "end": 3.006,
+          "score": 0.999
+        },
+        {
+          "char": "r",
+          "start": 3.006,
+          "end": 3.087,
+          "score": 0.749
+        },
+        {
+          "char": "s",
+          "start": 3.087,
+          "end": 3.127,
+          "score": 0.546
+        },
+        {
+          "char": " ",
+          "start": 3.127,
+          "end": 3.167,
+          "score": 0.494
+        },
+        {
+          "char": "t",
+          "start": 3.167,
+          "end": 3.207,
+          "score": 0.5
+        },
+        {
+          "char": "h",
+          "start": 3.207,
+          "end": 3.227,
+          "score": 1.0
+        },
+        {
+          "char": "e",
+          "start": 3.227,
+          "end": 3.267,
+          "score": 0.505
+        },
+        {
+          "char": " ",
+          "start": 3.267,
+          "end": 3.367,
+          "score": 0.583
+        },
+        {
+          "char": "a",
+          "start": 3.367,
+          "end": 3.427,
+          "score": 0.667
+        },
+        {
+          "char": "t",
+          "start": 3.427,
+          "end": 3.487,
+          "score": 0.703
+        },
+        {
+          "char": "m",
+          "start": 3.487,
+          "end": 3.548,
+          "score": 0.667
+        },
+        {
+          "char": "o",
+          "start": 3.548,
+          "end": 3.608,
+          "score": 0.926
+        },
+        {
+          "char": "s",
+          "start": 3.608,
+          "end": 3.668,
+          "score": 0.701
+        },
+        {
+          "char": "p",
+          "start": 3.668,
+          "end": 3.688,
+          "score": 0.937
+        },
+        {
+          "char": "h",
+          "start": 3.688,
+          "end": 3.748,
+          "score": 0.667
+        },
+        {
+          "char": "e",
+          "start": 3.748,
+          "end": 3.808,
+          "score": 0.646
+        },
+        {
+          "char": "r",
+          "start": 3.808,
+          "end": 3.848,
+          "score": 0.502
+        },
+        {
+          "char": "e",
+          "start": 3.848,
+          "end": 3.868,
+          "score": 0.727
+        },
+        {
+          "char": ".",
+          "start": 3.868,
+          "end": 3.888,
+          "score": 1.0
+        },
+        {
+          "char": " ",
+          "start": 3.888,
+          "end": 4.57,
+          "score": 0.971
+        }
+      ]
+    },
+    {
+      "start": 4.57,
+      "end": 9.981,
+      "text": "Plants, algae, and cyanobacteria use this process, so most food chains begin with it.",
+      "words": [
+        {
+          "word": "Plants,",
+          "start": 4.57,
+          "end": 4.931,
+          "score": 0.811
+        },
+        {
+          "word": "algae,",
+          "start": 5.291,
+          "end": 5.632,
+          "score": 0.818
+        },
+        {
+          "word": "and",
+          "start": 5.692,
+          "end": 5.772,
+          "score": 0.835
+        },
+        {
+          "word": "cyanobacteria",
+          "start": 5.833,
+          "end": 6.775,
+          "score": 0.877
+        },
+        {
+          "word": "use",
+          "start": 7.015,
+          "end": 7.155,
+          "score": 0.719
+        },
+        {
+          "word": "this",
+          "start": 7.195,
+          "end": 7.336,
+          "score": 0.79
+        },
+        {
+          "word": "process,",
+          "start": 7.396,
+          "end": 7.897,
+          "score": 0.855
+        },
+        {
+          "word": "so",
+          "start": 8.258,
+          "end": 8.378,
+          "score": 0.865
+        },
+        {
+          "word": "most",
+          "start": 8.458,
+          "end": 8.659,
+          "score": 0.786
+        },
+        {
+          "word": "food",
+          "start": 8.719,
+          "end": 8.939,
+          "score": 0.825
+        },
+        {
+          "word": "chains",
+          "start": 9.019,
+          "end": 9.32,
+          "score": 0.922
+        },
+        {
+          "word": "begin",
+          "start": 9.4,
+          "end": 9.681,
+          "score": 0.738
+        },
+        {
+          "word": "with",
+          "start": 9.721,
+          "end": 9.841,
+          "score": 0.81
+        },
+        {
+          "word": "it.",
+          "start": 9.921,
+          "end": 9.981,
+          "score": 0.987
+        }
+      ],
+      "chars": [
+        {
+          "char": "P",
+          "start": 4.57,
+          "end": 4.61,
+          "score": 0.678
+        },
+        {
+          "char": "l",
+          "start": 4.61,
+          "end": 4.73,
+          "score": 0.833
+        },
+        {
+          "char": "a",
+          "start": 4.73,
+          "end": 4.77,
+          "score": 0.55
+        },
+        {
+          "char": "n",
+          "start": 4.77,
+          "end": 4.85,
+          "score": 0.75
+        },
+        {
+          "char": "t",
+          "start": 4.85,
+          "end": 4.891,
+          "score": 0.867
+        },
+        {
+          "char": "s",
+          "start": 4.891,
+          "end": 4.911,
+          "score": 1.0
+        },
+        {
+          "char": ",",
+          "start": 4.911,
+          "end": 4.931,
+          "score": 1.0
+        },
+        {
+          "char": " ",
+          "start": 4.931,
+          "end": 5.291,
+          "score": 0.944
+        },
+        {
+          "char": "a",
+          "start": 5.291,
+          "end": 5.331,
+          "score": 0.926
+        },
+        {
+          "char": "l",
+          "start": 5.331,
+          "end": 5.432,
+          "score": 0.8
+        },
+        {
+          "char": "g",
+          "start": 5.432,
+          "end": 5.532,
+          "score": 0.731
+        },
+        {
+          "char": "a",
+          "start": 5.532,
+          "end": 5.552,
+          "score": 0.459
+        },
+        {
+          "char": "e",
+          "start": 5.552,
+          "end": 5.612,
+          "score": 0.994
+        },
+        {
+          "char": ",",
+          "start": 5.612,
+          "end": 5.632,
+          "score": 1.0
+        },
+        {
+          "char": " ",
+          "start": 5.632,
+          "end": 5.692,
+          "score": 1.0
+        },
+        {
+          "char": "a",
+          "start": 5.692,
+          "end": 5.712,
+          "score": 1.0
+        },
+        {
+          "char": "n",
+          "start": 5.712,
+          "end": 5.732,
+          "score": 0.998
+        },
+        {
+          "char": "d",
+          "start": 5.732,
+          "end": 5.772,
+          "score": 0.507
+        },
+        {
+          "char": " ",
+          "start": 5.772,
+          "end": 5.833,
+          "score": 0.385
+        },
+        {
+          "char": "c",
+          "start": 5.833,
+          "end": 5.973,
+          "score": 0.862
+        },
+        {
+          "char": "y",
+          "start": 5.973,
+          "end": 6.033,
+          "score": 0.381
+        },
+        {
+          "char": "a",
+          "start": 6.033,
+          "end": 6.053,
+          "score": 1.0
+        },
+        {
+          "char": "n",
+          "start": 6.053,
+          "end": 6.133,
+          "score": 0.829
+        },
+        {
+          "char": "o",
+          "start": 6.133,
+          "end": 6.213,
+          "score": 0.977
+        },
+        {
+          "char": "b",
+          "start": 6.213,
+          "end": 6.273,
+          "score": 1.0
+        },
+        {
+          "char": "a",
+          "start": 6.273,
+          "end": 6.314,
+          "score": 0.999
+        },
+        {
+          "char": "c",
+          "start": 6.314,
+          "end": 6.394,
+          "score": 0.993
+        },
+        {
+          "char": "t",
+          "start": 6.394,
+          "end": 6.494,
+          "score": 0.931
+        },
+        {
+          "char": "e",
+          "start": 6.494,
+          "end": 6.534,
+          "score": 0.968
+        },
+        {
+          "char": "r",
+          "start": 6.534,
+          "end": 6.614,
+          "score": 0.54
+        },
+        {
+          "char": "i",
+          "start": 6.614,
+          "end": 6.714,
+          "score": 0.991
+        },
+        {
+          "char": "a",
+          "start": 6.714,
+          "end": 6.775,
+          "score": 0.934
+        },
+        {
+          "char": " ",
+          "start": 6.775,
+          "end": 7.015,
+          "score": 0.831
+        },
+        {
+          "char": "u",
+          "start": 7.015,
+          "end": 7.055,
+          "score": 0.996
+        },
+        {
+          "char": "s",
+          "start": 7.055,
+          "end": 7.095,
+          "score": 0.514
+        },
+        {
+          "char": "e",
+          "start": 7.095,
+          "end": 7.155,
+          "score": 0.646
+        },
+        {
+          "char": " ",
+          "start": 7.155,
+          "end": 7.195,
+          "score": 0.528
+        },
+        {
+          "char": "t",
+          "start": 7.195,
+          "end": 7.216,
+          "score": 1.0
+        },
+        {
+          "char": "h",
+          "start": 7.216,
+          "end": 7.276,
+          "score": 0.655
+        },
+        {
+          "char": "i",
+          "start": 7.276,
+          "end": 7.296,
+          "score": 1.0
+        },
+        {
+          "char": "s",
+          "start": 7.296,
+          "end": 7.336,
+          "score": 0.504
+        },
+        {
+          "char": " ",
+          "start": 7.336,
+          "end": 7.396,
+          "score": 0.354
+        },
+        {
+          "char": "p",
+          "start": 7.396,
+          "end": 7.436,
+          "score": 0.5
+        },
+        {
+          "char": "r",
+          "start": 7.436,
+          "end": 7.536,
+          "score": 0.8
+        },
+        {
+          "char": "o",
+          "start": 7.536,
+          "end": 7.616,
+          "score": 0.936
+        },
+        {
+          "char": "c",
+          "start": 7.616,
+          "end": 7.757,
+          "score": 0.979
+        },
+        {
+          "char": "e",
+          "start": 7.757,
+          "end": 7.837,
+          "score": 0.692
+        },
+        {
+          "char": "s",
+          "start": 7.837,
+          "end": 7.857,
+          "score": 0.999
+        },
+        {
+          "char": "s",
+          "start": 7.857,
+          "end": 7.877,
+          "score": 0.937
+        },
+        {
+          "char": ",",
+          "start": 7.877,
+          "end": 7.897,
+          "score": 0.999
+        },
+        {
+          "char": " ",
+          "start": 7.897,
+          "end": 8.258,
+          "score": 0.944
+        },
+        {
+          "char": "s",
+          "start": 8.258,
+          "end": 8.338,
+          "score": 0.751
+        },
+        {
+          "char": "o",
+          "start": 8.338,
+          "end": 8.378,
+          "score": 0.98
+        },
+        {
+          "char": " ",
+          "start": 8.378,
+          "end": 8.458,
+          "score": 0.651
+        },
+        {
+          "char": "m",
+          "start": 8.458,
+          "end": 8.518,
+          "score": 1.0
+        },
+        {
+          "char": "o",
+          "start": 8.518,
+          "end": 8.558,
+          "score": 0.989
+        },
+        {
+          "char": "s",
+          "start": 8.558,
+          "end": 8.598,
+          "score": 0.501
+        },
+        {
+          "char": "t",
+          "start": 8.598,
+          "end": 8.659,
+          "score": 0.653
+        },
+        {
+          "char": " ",
+          "start": 8.659,
+          "end": 8.719,
+          "score": 0.986
+        },
+        {
+          "char": "f",
+          "start": 8.719,
+          "end": 8.739,
+          "score": 0.894
+        },
+        {
+          "char": "o",
+          "start": 8.739,
+          "end": 8.759,
+          "score": 1.0
+        },
+        {
+          "char": "o",
+          "start": 8.759,
+          "end": 8.879,
+          "score": 0.734
+        },
+        {
+          "char": "d",
+          "start": 8.879,
+          "end": 8.939,
+          "score": 0.671
+        },
+        {
+          "char": " ",
+          "start": 8.939,
+          "end": 9.019,
+          "score": 0.749
+        },
+        {
+          "char": "c",
+          "start": 9.019,
+          "end": 9.039,
+          "score": 1.0
+        },
+        {
+          "char": "h",
+          "start": 9.039,
+          "end": 9.14,
+          "score": 0.849
+        },
+        {
+          "char": "a",
+          "start": 9.14,
+          "end": 9.16,
+          "score": 1.0
+        },
+        {
+          "char": "i",
+          "start": 9.16,
+          "end": 9.2,
+          "score": 0.979
+        },
+        {
+          "char": "n",
+          "start": 9.2,
+          "end": 9.3,
+          "score": 0.8
+        },
+        {
+          "char": "s",
+          "start": 9.3,
+          "end": 9.32,
+          "score": 0.901
+        },
+        {
+          "char": " ",
+          "start": 9.32,
+          "end": 9.4,
+          "score": 0.384
+        },
+        {
+          "char": "b",
+          "start": 9.4,
+          "end": 9.46,
+          "score": 0.666
+        },
+        {
+          "char": "e",
+          "start": 9.46,
+          "end": 9.52,
+          "score": 0.998
+        },
+        {
+          "char": "g",
+          "start": 9.52,
+          "end": 9.581,
+          "score": 0.94
+        },
+        {
+          "char": "i",
+          "start": 9.581,
+          "end": 9.621,
+          "score": 0.421
+        },
+        {
+          "char": "n",
+          "start": 9.621,
+          "end": 9.681,
+          "score": 0.665
+        },
+        {
+          "char": " ",
+          "start": 9.681,
+          "end": 9.721,
+          "score": 0.5
+        },
+        {
+          "char": "w",
+          "start": 9.721,
+          "end": 9.761,
+          "score": 0.756
+        },
+        {
+          "char": "i",
+          "start": 9.761,
+          "end": 9.781,
+          "score": 1.0
+        },
+        {
+          "char": "t",
+          "start": 9.781,
+          "end": 9.801,
+          "score": 0.985
+        },
+        {
+          "char": "h",
+          "start": 9.801,
+          "end": 9.841,
+          "score": 0.499
+        },
+        {
+          "char": " ",
+          "start": 9.841,
+          "end": 9.921,
+          "score": 0.738
+        },
+        {
+          "char": "i",
+          "start": 9.921,
+          "end": 9.941,
+          "score": 1.0
+        },
+        {
+          "char": "t",
+          "start": 9.941,
+          "end": 9.961,
+          "score": 0.961
+        },
+        {
+          "char": ".",
+          "start": 9.961,
+          "end": 9.981,
+          "score": 1.0
+        },
+        {
+          "char": " ",
+          "start": 9.981,
+          "end": 10.623,
+          "score": 1.0
+        }
+      ]
+    },
+    {
+      "start": 10.623,
+      "end": 16.295,
+      "text": "This lesson covers oxygenic photosynthesis, the common form that releases oxygen.",
+      "words": [
+        {
+          "word": "This",
+          "start": 10.623,
+          "end": 10.783,
+          "score": 0.812
+        },
+        {
+          "word": "lesson",
+          "start": 10.863,
+          "end": 11.184,
+          "score": 0.889
+        },
+        {
+          "word": "covers",
+          "start": 11.284,
+          "end": 11.605,
+          "score": 0.724
+        },
+        {
+          "word": "oxygenic",
+          "start": 11.625,
+          "end": 12.387,
+          "score": 0.921
+        },
+        {
+          "word": "photosynthesis,",
+          "start": 12.427,
+          "end": 13.208,
+          "score": 0.911
+        },
+        {
+          "word": "the",
+          "start": 13.629,
+          "end": 13.709,
+          "score": 0.825
+        },
+        {
+          "word": "common",
+          "start": 13.77,
+          "end": 14.09,
+          "score": 0.871
+        },
+        {
+          "word": "form",
+          "start": 14.15,
+          "end": 14.451,
+          "score": 0.9
+        },
+        {
+          "word": "that",
+          "start": 14.511,
+          "end": 14.631,
+          "score": 0.887
+        },
+        {
+          "word": "releases",
+          "start": 14.692,
+          "end": 15.193,
+          "score": 0.864
+        },
+        {
+          "word": "oxygen.",
+          "start": 15.213,
+          "end": 16.295,
+          "score": 0.914
+        }
+      ],
+      "chars": [
+        {
+          "char": "T",
+          "start": 10.623,
+          "end": 10.643,
+          "score": 0.997
+        },
+        {
+          "char": "h",
+          "start": 10.643,
+          "end": 10.723,
+          "score": 0.745
+        },
+        {
+          "char": "i",
+          "start": 10.723,
+          "end": 10.743,
+          "score": 1.0
+        },
+        {
+          "char": "s",
+          "start": 10.743,
+          "end": 10.783,
+          "score": 0.507
+        },
+        {
+          "char": " ",
+          "start": 10.783,
+          "end": 10.863,
+          "score": 0.749
+        },
+        {
+          "char": "l",
+          "start": 10.863,
+          "end": 10.923,
+          "score": 1.0
+        },
+        {
+          "char": "e",
+          "start": 10.923,
+          "end": 10.944,
+          "score": 1.0
+        },
+        {
+          "char": "s",
+          "start": 10.944,
+          "end": 10.964,
+          "score": 0.964
+        },
+        {
+          "char": "s",
+          "start": 10.964,
+          "end": 11.104,
+          "score": 0.852
+        },
+        {
+          "char": "o",
+          "start": 11.104,
+          "end": 11.124,
+          "score": 0.885
+        },
+        {
+          "char": "n",
+          "start": 11.124,
+          "end": 11.184,
+          "score": 0.632
+        },
+        {
+          "char": " ",
+          "start": 11.184,
+          "end": 11.284,
+          "score": 0.599
+        },
+        {
+          "char": "c",
+          "start": 11.284,
+          "end": 11.344,
+          "score": 1.0
+        },
+        {
+          "char": "o",
+          "start": 11.344,
+          "end": 11.384,
+          "score": 0.501
+        },
+        {
+          "char": "v",
+          "start": 11.384,
+          "end": 11.445,
+          "score": 0.806
+        },
+        {
+          "char": "e",
+          "start": 11.445,
+          "end": 11.465,
+          "score": 0.932
+        },
+        {
+          "char": "r",
+          "start": 11.465,
+          "end": 11.565,
+          "score": 0.606
+        },
+        {
+          "char": "s",
+          "start": 11.565,
+          "end": 11.605,
+          "score": 0.502
+        },
+        {
+          "char": " ",
+          "start": 11.605,
+          "end": 11.625,
+          "score": 0.0
+        },
+        {
+          "char": "o",
+          "start": 11.625,
+          "end": 11.845,
+          "score": 0.72
+        },
+        {
+          "char": "x",
+          "start": 11.845,
+          "end": 12.026,
+          "score": 0.898
+        },
+        {
+          "char": "y",
+          "start": 12.026,
+          "end": 12.086,
+          "score": 0.999
+        },
+        {
+          "char": "g",
+          "start": 12.086,
+          "end": 12.166,
+          "score": 0.999
+        },
+        {
+          "char": "e",
+          "start": 12.166,
+          "end": 12.226,
+          "score": 0.94
+        },
+        {
+          "char": "n",
+          "start": 12.226,
+          "end": 12.286,
+          "score": 0.987
+        },
+        {
+          "char": "i",
+          "start": 12.286,
+          "end": 12.327,
+          "score": 0.983
+        },
+        {
+          "char": "c",
+          "start": 12.327,
+          "end": 12.387,
+          "score": 0.842
+        },
+        {
+          "char": " ",
+          "start": 12.387,
+          "end": 12.427,
+          "score": 0.971
+        },
+        {
+          "char": "p",
+          "start": 12.427,
+          "end": 12.447,
+          "score": 0.999
+        },
+        {
+          "char": "h",
+          "start": 12.447,
+          "end": 12.507,
+          "score": 0.922
+        },
+        {
+          "char": "o",
+          "start": 12.507,
+          "end": 12.567,
+          "score": 0.998
+        },
+        {
+          "char": "t",
+          "start": 12.567,
+          "end": 12.627,
+          "score": 0.922
+        },
+        {
+          "char": "o",
+          "start": 12.627,
+          "end": 12.687,
+          "score": 0.975
+        },
+        {
+          "char": "s",
+          "start": 12.687,
+          "end": 12.747,
+          "score": 0.994
+        },
+        {
+          "char": "y",
+          "start": 12.747,
+          "end": 12.767,
+          "score": 0.933
+        },
+        {
+          "char": "n",
+          "start": 12.767,
+          "end": 12.848,
+          "score": 0.745
+        },
+        {
+          "char": "t",
+          "start": 12.848,
+          "end": 12.868,
+          "score": 1.0
+        },
+        {
+          "char": "h",
+          "start": 12.868,
+          "end": 12.928,
+          "score": 0.989
+        },
+        {
+          "char": "e",
+          "start": 12.928,
+          "end": 12.968,
+          "score": 0.999
+        },
+        {
+          "char": "s",
+          "start": 12.968,
+          "end": 13.108,
+          "score": 0.86
+        },
+        {
+          "char": "i",
+          "start": 13.108,
+          "end": 13.148,
+          "score": 0.85
+        },
+        {
+          "char": "s",
+          "start": 13.148,
+          "end": 13.168,
+          "score": 0.999
+        },
+        {
+          "char": ",",
+          "start": 13.168,
+          "end": 13.208,
+          "score": 0.482
+        },
+        {
+          "char": " ",
+          "start": 13.208,
+          "end": 13.629,
+          "score": 0.912
+        },
+        {
+          "char": "t",
+          "start": 13.629,
+          "end": 13.649,
+          "score": 1.0
+        },
+        {
+          "char": "h",
+          "start": 13.649,
+          "end": 13.689,
+          "score": 0.503
+        },
+        {
+          "char": "e",
+          "start": 13.689,
+          "end": 13.709,
+          "score": 0.971
+        },
+        {
+          "char": " ",
+          "start": 13.709,
+          "end": 13.77,
+          "score": 0.666
+        },
+        {
+          "char": "c",
+          "start": 13.77,
+          "end": 13.87,
+          "score": 1.0
+        },
+        {
+          "char": "o",
+          "start": 13.87,
+          "end": 13.89,
+          "score": 1.0
+        },
+        {
+          "char": "m",
+          "start": 13.89,
+          "end": 13.95,
+          "score": 0.997
+        },
+        {
+          "char": "m",
+          "start": 13.95,
+          "end": 14.01,
+          "score": 0.667
+        },
+        {
+          "char": "o",
+          "start": 14.01,
+          "end": 14.03,
+          "score": 1.0
+        },
+        {
+          "char": "n",
+          "start": 14.03,
+          "end": 14.09,
+          "score": 0.561
+        },
+        {
+          "char": " ",
+          "start": 14.09,
+          "end": 14.15,
+          "score": 0.943
+        },
+        {
+          "char": "f",
+          "start": 14.15,
+          "end": 14.271,
+          "score": 1.0
+        },
+        {
+          "char": "o",
+          "start": 14.271,
+          "end": 14.311,
+          "score": 0.864
+        },
+        {
+          "char": "r",
+          "start": 14.311,
+          "end": 14.371,
+          "score": 0.988
+        },
+        {
+          "char": "m",
+          "start": 14.371,
+          "end": 14.451,
+          "score": 0.747
+        },
+        {
+          "char": " ",
+          "start": 14.451,
+          "end": 14.511,
+          "score": 0.389
+        },
+        {
+          "char": "t",
+          "start": 14.511,
+          "end": 14.551,
+          "score": 0.654
+        },
+        {
+          "char": "h",
+          "start": 14.551,
+          "end": 14.591,
+          "score": 0.982
+        },
+        {
+          "char": "a",
+          "start": 14.591,
+          "end": 14.611,
+          "score": 1.0
+        },
+        {
+          "char": "t",
+          "start": 14.611,
+          "end": 14.631,
+          "score": 0.913
+        },
+        {
+          "char": " ",
+          "start": 14.631,
+          "end": 14.692,
+          "score": 0.336
+        },
+        {
+          "char": "r",
+          "start": 14.692,
+          "end": 14.752,
+          "score": 0.667
+        },
+        {
+          "char": "e",
+          "start": 14.752,
+          "end": 14.832,
+          "score": 0.999
+        },
+        {
+          "char": "l",
+          "start": 14.832,
+          "end": 14.892,
+          "score": 0.995
+        },
+        {
+          "char": "e",
+          "start": 14.892,
+          "end": 14.932,
+          "score": 0.957
+        },
+        {
+          "char": "a",
+          "start": 14.932,
+          "end": 14.972,
+          "score": 0.998
+        },
+        {
+          "char": "s",
+          "start": 14.972,
+          "end": 15.072,
+          "score": 0.799
+        },
+        {
+          "char": "e",
+          "start": 15.072,
+          "end": 15.153,
+          "score": 0.867
+        },
+        {
+          "char": "s",
+          "start": 15.153,
+          "end": 15.193,
+          "score": 0.632
+        },
+        {
+          "char": " ",
+          "start": 15.193,
+          "end": 15.213,
+          "score": 0.0
+        },
+        {
+          "char": "o",
+          "start": 15.213,
+          "end": 15.413,
+          "score": 0.741
+        },
+        {
+          "char": "x",
+          "start": 15.413,
+          "end": 15.533,
+          "score": 1.0
+        },
+        {
+          "char": "y",
+          "start": 15.533,
+          "end": 15.594,
+          "score": 0.99
+        },
+        {
+          "char": "g",
+          "start": 15.594,
+          "end": 15.674,
+          "score": 0.999
+        },
+        {
+          "char": "e",
+          "start": 15.674,
+          "end": 15.694,
+          "score": 0.833
+        },
+        {
+          "char": "n",
+          "start": 15.694,
+          "end": 15.714,
+          "score": 1.0
+        },
+        {
+          "char": ".",
+          "start": 15.714,
+          "end": 16.295,
+          "score": 0.833
+        }
+      ]
+    }
+  ],
+  "word_segments": [
+    {
+      "word": "The",
+      "start": 0.0,
+      "end": 0.401,
+      "score": 0.91
+    },
+    {
+      "word": "sugar",
+      "start": 0.461,
+      "end": 0.742,
+      "score": 0.757
+    },
+    {
+      "word": "feeds",
+      "start": 0.822,
+      "end": 1.082,
+      "score": 0.957
+    },
+    {
+      "word": "the",
+      "start": 1.142,
+      "end": 1.223,
+      "score": 0.833
+    },
+    {
+      "word": "plant,",
+      "start": 1.263,
+      "end": 1.563,
+      "score": 0.88
+    },
+    {
+      "word": "and",
+      "start": 1.924,
+      "end": 2.004,
+      "score": 0.686
+    },
+    {
+      "word": "the",
+      "start": 2.024,
+      "end": 2.105,
+      "score": 0.572
+    },
+    {
+      "word": "oxygen",
+      "start": 2.245,
+      "end": 2.686,
+      "score": 0.797
+    },
+    {
+      "word": "enters",
+      "start": 2.826,
+      "end": 3.127,
+      "score": 0.84
+    },
+    {
+      "word": "the",
+      "start": 3.167,
+      "end": 3.267,
+      "score": 0.668
+    },
+    {
+      "word": "atmosphere.",
+      "start": 3.367,
+      "end": 3.888,
+      "score": 0.74
+    },
+    {
+      "word": "Plants,",
+      "start": 4.57,
+      "end": 4.931,
+      "score": 0.811
+    },
+    {
+      "word": "algae,",
+      "start": 5.291,
+      "end": 5.632,
+      "score": 0.818
+    },
+    {
+      "word": "and",
+      "start": 5.692,
+      "end": 5.772,
+      "score": 0.835
+    },
+    {
+      "word": "cyanobacteria",
+      "start": 5.833,
+      "end": 6.775,
+      "score": 0.877
+    },
+    {
+      "word": "use",
+      "start": 7.015,
+      "end": 7.155,
+      "score": 0.719
+    },
+    {
+      "word": "this",
+      "start": 7.195,
+      "end": 7.336,
+      "score": 0.79
+    },
+    {
+      "word": "process,",
+      "start": 7.396,
+      "end": 7.897,
+      "score": 0.855
+    },
+    {
+      "word": "so",
+      "start": 8.258,
+      "end": 8.378,
+      "score": 0.865
+    },
+    {
+      "word": "most",
+      "start": 8.458,
+      "end": 8.659,
+      "score": 0.786
+    },
+    {
+      "word": "food",
+      "start": 8.719,
+      "end": 8.939,
+      "score": 0.825
+    },
+    {
+      "word": "chains",
+      "start": 9.019,
+      "end": 9.32,
+      "score": 0.922
+    },
+    {
+      "word": "begin",
+      "start": 9.4,
+      "end": 9.681,
+      "score": 0.738
+    },
+    {
+      "word": "with",
+      "start": 9.721,
+      "end": 9.841,
+      "score": 0.81
+    },
+    {
+      "word": "it.",
+      "start": 9.921,
+      "end": 9.981,
+      "score": 0.987
+    },
+    {
+      "word": "This",
+      "start": 10.623,
+      "end": 10.783,
+      "score": 0.812
+    },
+    {
+      "word": "lesson",
+      "start": 10.863,
+      "end": 11.184,
+      "score": 0.889
+    },
+    {
+      "word": "covers",
+      "start": 11.284,
+      "end": 11.605,
+      "score": 0.724
+    },
+    {
+      "word": "oxygenic",
+      "start": 11.625,
+      "end": 12.387,
+      "score": 0.921
+    },
+    {
+      "word": "photosynthesis,",
+      "start": 12.427,
+      "end": 13.208,
+      "score": 0.911
+    },
+    {
+      "word": "the",
+      "start": 13.629,
+      "end": 13.709,
+      "score": 0.825
+    },
+    {
+      "word": "common",
+      "start": 13.77,
+      "end": 14.09,
+      "score": 0.871
+    },
+    {
+      "word": "form",
+      "start": 14.15,
+      "end": 14.451,
+      "score": 0.9
+    },
+    {
+      "word": "that",
+      "start": 14.511,
+      "end": 14.631,
+      "score": 0.887
+    },
+    {
+      "word": "releases",
+      "start": 14.692,
+      "end": 15.193,
+      "score": 0.864
+    },
+    {
+      "word": "oxygen.",
+      "start": 15.213,
+      "end": 16.295,
+      "score": 0.914
+    }
+  ]
+}
